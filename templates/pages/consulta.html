@@ -14,23 +14,31 @@
 <table class="table table-hover">
   <thead>
     <tr>
-      <th scope="col">Código A</th>
-      <th scope="col">Ano/mês</th>
+      <th scope="col">Classificação</th>
       <th scope="col">Produto</th>
+      <th scope="col">Nível 1</th>
+      <th scope="col">Nível 2</th>
       <th scope="col">Cliente</th>
-      <th scope="col">Receita Liquida (R$)</th>
+      <th scope="col">Data</th>
       <th scope="col">Receita Bruta (R$)</th>
+      <th scope="col">Receita Líquida (R$)</th>
+      <th scope="col">Comissão Escritório (%)</th>
+      <th scope="col">Comissão Escritório (R$)</th>
     </tr>
   </thead>
   <tbody>
   {% for i in data %}
     <tr>
-      <th scope="row">A{{ i.codigo_assessor }}</th>
-      <td>{{ i.ano_mes.strftime('%Y/%m') }}</td>
+      <td>{{ i.classificacao }}</td>
       <td>{{ i.produto }}</td>
+      <td>{{ i.nivel1 }}</td>
+      <td>{{ i.nivel2 }}</td>
       <td>{{ i.cliente }}</td>
-      <td>{{ "{:,.2f}".format( 0.01 * i.receita_liquida) }}</td>
+      <td>{{ i.data.strftime('%Y/%m') }}</td>
       <td>{{ "{:,.2f}".format( 0.01 * i.receita_bruta) }}</td>
+      <td>{{ "{:,.2f}".format( 0.01 * i.receita_liquida) }}</td>
+      <td>{{ "{:,.2f}".format( 100 * i.comissao_escritorio_porcento) }}</td>
+      <td>{{ "{:,.2f}".format( 0.01 * i.comissao_escritorio) }}</td>
     </tr>
   {% endfor %}
   </tbody>
@@ -117,7 +125,7 @@
     <th scope="col">Ano/mês</th>
     <th scope="col">Cliente</th>
     <th scope="col">Adiantamento Previdência (R$)</th>
-  </tr>
+  </tr> 
 </thead>
 <tbody>
 {% for i in data %}
