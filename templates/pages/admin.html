@@ -1,0 +1,29 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h3>Administração</h3>
+</div>
+<div class="col-md-6 offset-md-3 mt-5">
+   <br>
+   <form accept-charset="UTF-8" action="{{ url_for('upload') }}" method="POST">
+     <div class="form-group mt-3">
+       <label class="mr-2">Selecione o arquivo de sua planilha para inclui-la no banco de dados: </label>
+       <input type="file" name="file">
+     </div>
+     <button type="submit" class="btn btn-primary">Enviar</button>
+   </form>
+</div>
+<div class="col-md-6 offset-md-3">
+  <br>
+  <p><b>Novo assessor: </b></p>
+  <form accept-charset="UTF-8" action="{{ url_for('adicionarassessor') }}" method="POST">
+    <div class="form-group mt-3">
+      {{ registerform.name(class_='form-control first-input', placeholder=registerform.name.label.text, required=true, autofocus=true) }}
+      {{ registerform.id(class_='form-control', placeholder=registerform.id.label.text, required=true)}}
+      {{ registerform.email(class_='form-control', placeholder=registerform.email.label.text, required=true) }}
+      <input type="submit" value="Cadastrar" class="btn btn-primary btn-lg">
+    </div>
+  </form>
+</div>
+{% endblock %}

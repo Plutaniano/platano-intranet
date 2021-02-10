@@ -1,0 +1,10 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h3>Bem vindo(a){{ ' , '+ current_user.nome if current_user.nome else '' }}.</h3>
+</div>
+<p class="lead"> Bla bla bla</p>
+
+{% endblock %}
