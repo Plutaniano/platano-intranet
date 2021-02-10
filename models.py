@@ -37,7 +37,7 @@ class Investimentos(db.Model):
   comissao_escritorio_porcento = db.Column(db.Float) 
   comissao_escritorio = db.Column(db.Integer)
   
-  assessor_direto_codigo = db.Column(db.Integer)
+  codigo_assessor = db.Column(db.Integer)
   assessor_direto_comissao_porcento = db.Column(db.Integer)
   assessor_direto_comissao = db.Column(db.Integer)
 
@@ -57,7 +57,7 @@ class Investimentos(db.Model):
 class Previdencia(db.Model):
   # Dados Cliente
   id = db.Column(db.Integer, primary_key=True)
-  ano_mes = db.Column(db.Integer)
+  ano_mes = db.Column(db.Date)
   tipo = db.Column(db.String(50))
   competencia = db.Column(db.Date)
   parceiro = db.Column(db.String(60))
@@ -105,7 +105,7 @@ class Previdencia(db.Model):
 
 class CoCorretagem(db.Model):
   id = db.Column(db.Integer, primary_key=True)
-  ano_mes = db.Column(db.Integer)
+  ano_mes = db.Column(db.Date)
   tipo = db.Column(db.String(30))
   competencia = db.Column(db.Date)
   parceiro = db.Column(db.String(60))
@@ -144,7 +144,7 @@ class CoCorretagem(db.Model):
 
 class IncentivoPrevidencia(db.Model):
   id = db.Column(db.Integer, primary_key=True)
-  ano_mes = db.Column(db.Integer)
+  ano_mes = db.Column(db.Date)
   mes_referencia = db.Column(db.Integer)
   status_docusign = db.Column(db.Boolean)
   codigo_escritorio = db.Column(db.Integer)

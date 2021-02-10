@@ -60,8 +60,11 @@
           <ul class="nav navbar-nav">
             <li {% if request.endpoint == 'home' %} class="active" {% endif %}><a href="{{ url_for('home') }}">Home</a></li>
             <li {% if request.endpoint == 'sobre' %} class="active" {% endif %}><a href="{{ url_for('sobre') }}">Sobre</a></li>
-            <li {% if request.endpoint == 'pagamento' %} class="active" {% endif %}><a href="{{ url_for('pagamento') }}">Pagamento</a></li>
+            {% if current_user.is_authenticated %}
+            <li {% if request.endpoint == 'consulta' %} class="active" {% endif %}><a href="{{ url_for('consulta') }}">Consulta</a></li>
+            {% endif %}
             {% if current_user.is_admin %}
+            <li {% if request.endpoint == 'assessores' %} class="active" {% endif %}><a href="{{ url_for('assessores') }}">Assessores</a></li>
             <li {% if request.endpoint == 'admin' %} class="active" {% endif %}><a href="{{ url_for('admin') }}">Admin</a></li>
             {% endif %}
             <!-- <li class="dropdown">

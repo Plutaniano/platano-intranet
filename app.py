@@ -29,18 +29,14 @@ def home():
 def sobre():
     return render_template('pages/sobre.html')
 
-@app.route('/pagamento')
-def pagamento():
-    return render_template('pages/pagamento.html')
-
 @app.route('/forgot')
 def forgot():
     form = ForgotForm(request.form)
     return render_template('forms/forgot.html', form=form)
 
-@app.route('/pj1', methods=['GET', 'POST'])
+@app.route('/consulta', methods=['GET', 'POST'])
 @login_required
-def pj1():
+def consulta():
     if current_user.is_admin:
         assessores = list(db.session.query(Assessor))
     else:
@@ -58,7 +54,7 @@ def pj1():
         form.assessores.choices.append(t)
 
     if request.method == 'GET':
-        return render_template('pages/pj1.html', assessores=assessores, anos_meses=anos_meses, form=form)
+        return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, form=form)
 
     if request.method == 'POST':
 
@@ -68,8 +64,16 @@ def pj1():
         ano_mes = date(ano, mes, 1)
         tabela = request.form.get('tabela')
 
-        data = db.session.query(Investimentos).filter_by(assessor_direto_codigo=assessor.id, ano_mes=ano_mes)
-        return render_template('pages/pj1.html', assessores=assessores, anos_meses=anos_meses, data=data, form=form, tabela=tabela)
+        d = {
+            'investimentos': Investimentos,
+            'previdencia': Previdencia,
+            'co_corretagem': CoCorretagem,
+            'incentivo_previdencia': IncentivoPrevidencia,
+            'bancoXP': BancoXP
+        }
+
+        data = db.session.query(d[tabela]).filter_by(codigo_assessor=assessor.id, ano_mes=ano_mes)
+        return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, data=data, form=form, tabela=tabela)
 
 
 
@@ -95,9 +99,10 @@ def adicionarassessor():
     flash('Assessor adicionado com sucesso.')
     return redirect(url_for('admin'))
 
-@app.route('/comissoes')
+
+@app.route('/assessores')
 @login_required
-def comissoes():
+def assessores():
     assessores = db.session.query(Assessor)
     return render_template('pages/comissoes.html', assessores=assessores)
 

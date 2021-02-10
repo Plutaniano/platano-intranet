@@ -38,7 +38,7 @@ def parse_investimentos(ws: Worksheet, ano_mes: datetime.date) -> None:
                                   comissao_escritorio_porcento=float(0.01*row[10].value),
                                   comissao_escritorio=int(100*row[11].value),
                                   
-                                  assessor_direto_codigo=cell_to_assessor_int(row[13]),
+                                  codigo_assessor=cell_to_assessor_int(row[13]),
                                   assessor_direto_comissao_porcento=float(0.01*row[14].value),
                                   assessor_direto_comissao=int(100*row[15].value),
                                   
@@ -79,7 +79,7 @@ def parse_previdencia(ws: Worksheet, ano_mes: datetime.date) -> None:
                                 # Dados do produto
                                 seguradora=str(row[8].value),
                                 produto=str(row[9].value),
-                                data_emissao=row[10].value.date() if isinstance(row[10].value, datetime.date) else datetime.date(1970, 1, 1),
+                                data_emissao=row[10].value.date() if isinstance(row[10].value, datetime.date) else None,
                                 reserva=int(100 * row[11].value if isinstance(row[11].value, float) else 0),
                                 tx_adm=float(row[12].value if isinstance(row[12].value, float) else 0),
                                 
