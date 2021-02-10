@@ -1,25 +1,51 @@
-from models import db, Investimentos, Previdencia, BancoXP, CoCorretagem, IncentivoPrevidencia
+from models import db, Investimentos, Previdencia, BancoXP, CoCorretagem, IncentivoPrevidencia, Cambio
 from openpyxl import Workbook, load_workbook
 from openpyxl.worksheet.worksheet import Worksheet
 import datetime
 import re
-from parse import *
 
 def parse_excel(filename: str) -> None:
     wb = load_workbook(filename)
     date = get_date(wb['Investimentos'].cell(1, 1).value)
     gerado = get_datetime(wb['Investimentos'].cell(1, 4).value)
 
-    parse_investimentos(wb['Investimentos'], date)
-    parse_previdencia(wb['Previdência'], date)
-    parse_co_corretagem(wb['Co-Corretagem'], date)
-    parse_incentivo_previdencia(wb['Incentivo Previdência'], date)
-    parse_banco_xp(wb['Banco XP'], date)
+    try:
+        parse_investimentos(wb['Investimentos'], date)
+    except Exception as e:
+        print('Sem investimentos' + str(e))
+
+    try:
+        parse_previdencia(wb['Previdência'], date)
+    except Exception as e:
+        print('Sem previdencia' + str(e))
+    
+    try:
+        parse_co_corretagem(wb['Co-Corretagem'], date)
+    except Exception as e:
+        print('Sem co-corretagem' + str(e))
+
+    try:
+        parse_incentivo_previdencia(wb['Incentivo Previdência'], date)
+    except Exception as e:
+        print('Sem incentivo previdencia')
+        
+    try:
+        parse_banco_xp(wb['Banco XP'], date)
+    except Exception as e:
+        print('Sem banco xp' + str(e))
+    
+    try:
+        parse_cambio(wb['Câmbio'], date)
+    except Exception as e:
+        print('Sem câmbio: ' + str(e))
+        
 
 
 
 def parse_investimentos(ws: Worksheet, ano_mes: datetime.date) -> None:
+    i = 0
     for row in ws.iter_rows():
+        print(f"Investimentos: {i}\r", end='')
         if row[0].value not in ['AJUSTES', 'RECEITAS']:
             continue
         
@@ -54,14 +80,17 @@ def parse_investimentos(ws: Worksheet, ano_mes: datetime.date) -> None:
                                   assessor_indireto3_comissao_porcento=float(0.01*row[26].value),
                                   assessor_indireto3_comissao=int(100*row[27].value)
                                   )
-            print(entry)
             db.session.add(entry)
             db.session.commit()
+            i += 1
+    print('')
 
 
 
 def parse_previdencia(ws: Worksheet, ano_mes: datetime.date) -> None:
+    i = 0
     for row in ws.iter_rows():
+        print(f"Prêvidencia: {i}\r", end='')
         if row[2].value not in ['PLATANO AGENTE AUTONOMO DE INVESTIMENTOS LTDA', 'Platano Investimentos']:
             continue
         
@@ -105,17 +134,20 @@ def parse_previdencia(ws: Worksheet, ano_mes: datetime.date) -> None:
 
                                 # Receita
                                 receita_bruta_total=int(100 * row[25].value),
-                                ir_sobre_receita_bruta=int(100 * row[26].value),
+                                ir_sobre_receita_bruta=float(row[26].value),
                                 receita_liquida_total=int(100 * row[27].value),
                                 obs=str(row[28].value)
                                 )
-            print(entry)
             db.session.add(entry)
             db.session.commit()
+            i += 1
+    print('')
 
 
 def parse_co_corretagem(ws: Worksheet, ano_mes: datetime.date) -> None:
+    i = 0
     for row in ws.iter_rows():
+        print(f"Co-corretagem: {i}\r", end='')
         if not isinstance(row[1].value, datetime.date):
             continue
         
@@ -161,14 +193,17 @@ def parse_co_corretagem(ws: Worksheet, ano_mes: datetime.date) -> None:
                                 receita_total=int(100 * row[25].value),
                                 obs=str(row[26].value)
                                 )
-            print(entry)
             db.session.add(entry)
             db.session.commit()
+            i += 1
+    print('')
 
 
 
 def parse_incentivo_previdencia(ws: Worksheet, ano_mes: datetime.date) -> None:
+    i = 0
     for row in ws.iter_rows():
+        print(f"Incentivo Previdência: {i}\r", end='')
         if not isinstance(row[0].value, datetime.date):
             continue
         
@@ -185,12 +220,15 @@ def parse_incentivo_previdencia(ws: Worksheet, ano_mes: datetime.date) -> None:
                                 movimentacao_cliente=int(100 * row[7].value),
                                 adiantamento_previdencia=int(100 * row[8].value)
                                 )
-            print(entry)
             db.session.add(entry)
             db.session.commit()
+            i += 1
+    print('')
 
 def parse_banco_xp(ws: Worksheet, ano_mes: datetime.date) -> None:
+    i = 0
     for row in ws.iter_rows():
+        print(f"Banco XP: {i}\r", end='')
         if not isinstance(row[0].value, datetime.date):
             continue
         
@@ -213,9 +251,36 @@ def parse_banco_xp(ws: Worksheet, ano_mes: datetime.date) -> None:
                                 deducoes=float(row[13].value),
                                 total_receita=int(100 * row[14].value)
                                 )
-            print(entry)
             db.session.add(entry)
             db.session.commit()
+            i += 1
+    print('')
+
+def parse_cambio(ws: Worksheet, ano_mes: datetime.date) -> None:
+    i = 0
+    for row in ws.iter_rows():
+        print(f"Câmbio: {i}\r", end='')
+        if row[1].value not in ['Compra', 'Venda']:
+            continue
+        
+        else:
+            entry = Cambio(
+                                ano_mes=ano_mes,
+                                codigo_cliente=row[0].value,
+                                tipo=row[1].value,
+                                data=row[2].value.date() if isinstance(row[2].value, datetime.date) else datetime.date(int(row[2].value.split('/')[2]), int(row[2].value.split('/')[1]), 1),
+                                moeda=str(row[3].value),
+                                volume=int(100 * row[4].value),
+                                receita=int(100 * row[5].value),
+                                taxa_cliente=int(100 * row[6].value),
+                                taxa_base=int(100 * row[7].value),
+                                spread_aplicado=float(row[8].value),
+                                codigo_assessor=int(row[10].value[1:])
+                                )
+            db.session.add(entry)
+            db.session.commit()
+            i += 1
+    print('')
 
 def get_date(s: str) -> datetime.date:
     m = re.findall('(\d{2})\-(\d{4})', s)[0]

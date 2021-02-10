@@ -17,6 +17,7 @@ class LoginForm(FlaskForm):
 class ForgotForm(FlaskForm):
     codigo_assessor = TextField('Email',         validators=[DataRequired(), Length(min=6, max=40), Email()])
 
+
 class QueryForm(FlaskForm):
     ano_mes = SelectField('Ano/mês',             validators=[DataRequired()], choices=[])
     assessores = SelectField('Assessor',         validators=[DataRequired()], choices=[])
@@ -24,4 +25,6 @@ class QueryForm(FlaskForm):
                                                                                        ('previdencia', 'Previdência'),
                                                                                        ('co_corretagem', 'Co-Corretagem'),
                                                                                        ('bancoXP','Banco XP'),
-                                                                                       ('incentivo_previdencia', 'Incentivo Previdência')])
+                                                                                       ('incentivo_previdencia', 'Incentivo Previdência'),
+                                                                                       ('cambio', 'Câmbio')
+                                                                                       ])

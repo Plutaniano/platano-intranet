@@ -1,9 +1,11 @@
-from flask import Flask, request, render_template, redirect, url_for, flash
+from flask import Flask, request, render_template, redirect, url_for, flash, Response
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, BaseQuery
 from forms import *
 from validate import *
 from datetime import datetime, date
+import csv
+import random
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -14,8 +16,8 @@ login_manager.init_app(app)
 from models import *
 
 @login_manager.user_loader
-def load_user(codigo_assessor):
-    user = db.session.query(Assessor).filter_by(codigo_assessor=codigo_assessor).first()
+def load_user(id):
+    user = db.session.query(Assessor).filter_by(codigo_assessor=id).first()
     return user
 
 # ------------------------
@@ -69,10 +71,16 @@ def consulta():
             'previdencia': Previdencia,
             'co_corretagem': CoCorretagem,
             'incentivo_previdencia': IncentivoPrevidencia,
-            'bancoXP': BancoXP
+            'bancoXP': BancoXP,
+            'cambio': Cambio
         }
-
         data = db.session.query(d[tabela]).filter_by(codigo_assessor=assessor.codigo_assessor, ano_mes=ano_mes)
+
+        if request.form.get('action')== 'Exportar':
+            text = query_to_csv(data, d[tabela], assessor.codigo_assessor)
+            return Response(text, mimetype="text/csv", headers={"Content-disposition": "attachment; filename=tabela.csv"})
+
+
         return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, data=data, form=form, tabela=tabela)
 
 
@@ -119,7 +127,7 @@ def login():
     if form.validate_on_submit():
         user = load_user(form.codigo_assessor.data)
         if user is None or user.password != form.password.data:
-            flash('Credenciais inválidas')
+            flash('Credenciais invalidas')
             return redirect(url_for('login'))
         login_user(user)                                        # TODO: Adicionar remember_me
         return redirect(url_for('home'))
@@ -129,3 +137,21 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+
+
+
+
+
+def query_to_csv(l: BaseQuery, tabela: db.Model, user: str) -> str:
+    l = list(l)
+    filename = f'temp/{user}_{datetime.now().isoformat()}.csv'
+
+    with open(filename, 'w', encoding='utf-8') as f:
+        writer = csv.writer(f, delimiter=';')
+        writer.writerow(map(lambda i: str(i).split('.')[1], tabela.__mapper__.columns))
+        [writer.writerow([getattr(curr, column.name) for column in tabela.__mapper__.columns]) for curr in l]
+        f.seek(0)
+
+    return open(filename, encoding='utf-8').read()
+

@@ -6,7 +6,8 @@
         {{ form.ano_mes(class_='form-control first-input', required=true) }}
         {{ form.assessores(class_='form-control', required=true) }}
         {{ form.tabela(class_='form-control', required=true) }}
-        <input type="submit" value="Consultar" class="btn btn-primary btn-lg">
+        <input type="submit" name="action" value="Consultar" class="btn btn-primary btn-lg">
+        <input type="submit" name="action" value="Exportar" class="btn btn-primary btn-lg">
     </div>
 </form>
 
@@ -34,7 +35,7 @@
       <td>{{ i.nivel1 }}</td>
       <td>{{ i.nivel2 }}</td>
       <td>{{ i.cliente }}</td>
-      <td>{{ i.data.strftime('%Y/%m') }}</td>
+      <td>{{ i.data.strftime('%Y/%m/%d') }}</td>
       <td>{{ "{:,.2f}".format( 0.01 * i.receita_bruta) }}</td>
       <td>{{ "{:,.2f}".format( 0.01 * i.receita_liquida) }}</td>
       <td>{{ "{:,.2f}".format( 100 * i.comissao_escritorio_porcento) }}</td>
@@ -50,19 +51,31 @@
 <table class="table table-hover">
   <thead>
     <tr>
-      <th scope="col">Código A</th>
       <th scope="col">Ano/mês</th>
+      <th scope="col">Tipo</th>
+      <th scope="col">Certificado/Apólice</th>
+      <th scope="col">Cliente</th>
+      <th scope="col">UP</th>
+      <th scope="col">Produto</th>
       <th scope="col">Receita Liquida Total (R$)</th>
+      <th scope="col">IR (%)</th>
       <th scope="col">Receita Bruta Total (R$)</th>
+      <th scope="col">Obs</th>
     </tr>
   </thead>
   <tbody>
   {% for i in data %}
     <tr>
-      <th scope="row">A{{ i.codigo_assessor }}</th>
       <td>{{ i.ano_mes.strftime('%Y/%m') }}</td>
-      <td>{{ "{:,.2f}".format( 0.01 * i.receita_liquida_total) }}</td>
+      <td>{{ i.tipo }}</td>
+      <td>{{ i.certificado }}</td>
+      <td>{{ i.codigo_cliente }}</td>
+      <td>{{ i.up }}</td>
+      <td>{{ i.produto }}</td>
       <td>{{ "{:,.2f}".format( 0.01 * i.receita_bruta_total) }}</td>
+      <td>{{ "{:,.2f}".format(i.ir_sobre_receita_bruta) }}</td>
+      <td>{{ "{:,.2f}".format( 0.01 * i.receita_liquida_total) }}</td>
+      <td>{{ i.obs }}</td>
     </tr>
   {% endfor %}
   </tbody>
@@ -73,18 +86,30 @@
 {% if tabela == 'co_corretagem' %}<table class="table table-hover">
   <thead>
     <tr>
-      <th scope="col">Código A</th>
       <th scope="col">Ano/mês</th>
+      <th scope="col">Tipo</th>
+      <th scope="col">Certificado/Apólice</th>
       <th scope="col">Cliente</th>
-      <th scope="col">Receita Total (R$)</th>
+      <th scope="col">Produto</th>
+      <th scope="col">Data de Contratação</th>
+      <th scope="col">Base (R$)</th>
+      <th scope="col">Repasse (%)</th>
+      <th scope="col">Receita (R$)</th>
+      <th scope="col">Receita Total(R$)</th>
     </tr>
   </thead>
   <tbody>
   {% for i in data %}
     <tr>
-      <th scope="row">A{{ i.codigo_assessor }}</th>
       <td>{{ i.ano_mes.strftime('%Y/%m') }}</td>
-      <td>{{ i.cliente }}</td>
+      <td>A{{ i.tipo }}</td>
+      <td>A{{ i.certificado }}</td>
+      <td>A{{ i.cliente }}</td>
+      <td>A{{ i.produto }}</td>
+      <td>{{ i.data_emissao.strftime('%Y/%m') }}</td>
+      <td>{{ i.aportes_base }}</td>
+      <td>{{ i.aportes_repasse_porcento }}</td>
+      <td>{{ i.aportes_receita }}</td>
       <td>{{ "{:,.2f}".format( 0.01 * i.receita_total) }}</td>
     </tr>
   {% endfor %}
@@ -96,18 +121,30 @@
 <table class="table table-hover">
   <thead>
     <tr>
-      <th scope="col">Código A</th>
-      <th scope="col">Ano/mês</th>
-      <th scope="col">Cliente</th>
-      <th scope="col">Total Receita (R$)</th>
+      <th scope="col">Cliente</td>
+      <th scope="col">Produto</th>
+      <th scope="col">Data de Contratação</th>
+      <th scope="col">Data de Vencimento</th>
+      <th scope="col">Valor Contratado (R$)</th>
+      <th scope="col">Juros (%a.a.)</th>
+      <th scope="col">Comissão Escritório (%a.a.)</th>
+      <th scope="col">Comissão Atualizada Acumulada (R$)</th>
+      <th scope="col">Deduções (%)</th>
+      <th scope="col">Total Receita Acumulada(R$)</th>
     </tr>
   </thead>
   <tbody>
   {% for i in data %}
     <tr>
-      <th scope="row">A{{ i.codigo_assessor }}</th>
-      <td>{{ i.ano_mes.strftime('%Y/%m') }}</td>
-      <td>{{ i.codigo_cliente }}</td>
+      <td>A{{ i.codigo_cliente }}</td>
+      <td>A{{ i.produto }}</td>
+      <td>{{ i.data_contratacao.strftime('%Y/%m/%d') }}</td>
+      <td>{{ i.data_vencimento.strftime('%Y/%m/%d') }}</td>
+      <td>{{ "{:,.2f}".format( 0.01 * i.valor_contratado) }}</td>
+      <td>{{ "{:,.2f}".format( 100 * i.juros_aa) }}</td>
+      <td>{{ "{:,.2f}".format( 100 * i.comissao_escritorio_porcento_aa) }}</td>
+      <td>{{ "{:,.2f}".format( 0.01 * i.comissao_atualizada_acumulada) }}</td>
+      <td>{{ 100 * i.deducoes }}</td>
       <td>{{ "{:,.2f}".format( 0.01 * i.total_receita) }}</td>
     </tr>
   {% endfor %}
@@ -121,19 +158,52 @@
 <table class="table table-hover">
 <thead>
   <tr>
-    <th scope="col">Código A</th>
-    <th scope="col">Ano/mês</th>
     <th scope="col">Cliente</th>
+    <th scope="col">Certificado - Fundo</th>
+    <th scope="col">Movimentação Cliente (R$)</th>
     <th scope="col">Adiantamento Previdência (R$)</th>
   </tr> 
 </thead>
 <tbody>
 {% for i in data %}
   <tr>
-    <th scope="row">A{{ i.codigo_assessor }}</th>
-    <td>{{ i.ano_mes.strftime('%Y/%m') }}</td>
     <td>{{ i.codigo_cliente }}</td>
+    <td>{{ i.certificado }}</td>
+    <td>{{ "{:,.2f}".format( 0.01 * i.movimentacao_cliente) }}</td>
     <td>{{ "{:,.2f}".format( 0.01 * i.adiantamento_previdencia) }}</td>
+  </tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
+
+{% if tabela == 'cambio' %}
+<table class="table table-hover">
+<thead>
+  <tr>
+    <th scope="col">Cliente</th>
+    <th scope="col">Tipo</th>
+    <th scope="col">Data</th>
+    <th scope="col">Moeda</th>
+    <th scope="col">Volume</th>
+    <th scope="col">Receita (R$)</th>
+    <th scope="col">Taxa Cliente</th>
+    <th scope="col">Taxa Base</th>
+    <th scope="col">Spread Aplicado (%)</th>
+  </tr> 
+</thead>
+<tbody>
+{% for i in data %}
+  <tr>
+    <td>{{ i.codigo_cliente }}</td>
+    <td>{{ i.tipo }}</td>
+    <td>{{ i.data.strftime('%Y/%m/%d') }}</td>
+    <td>{{ i.moeda }}</td>
+    <td>{{ "{:,.2f}".format(0.01 * i.volume) }}</td>
+    <td>{{ "{:,.2f}".format(0.01 * i.receita) }}</td>
+    <td>{{ "{:,.2f}".format(0.01 * i.taxa_cliente) }}</td>
+    <td>{{ "{:,.2f}".format(0.01 * i.taxa_base) }}</td>
+    <td>{{ "{:,.2f}".format(i.spread_aplicado) }}</td>
   </tr>
 {% endfor %}
 </tbody>

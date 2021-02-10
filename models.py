@@ -1,3 +1,4 @@
+# coding=utf-8
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
@@ -18,14 +19,16 @@ class Assessor(UserMixin, db.Model):
   comissao_cambio = db.Column(db.Float, default=0.0)
   obs = db.Column(db.String(120), default=None)
 
-  def __repr__(self):
-    return f"<Assessor {'[ADMIN]' if self.is_admin else ''} A{self.codigo_assessor}:{self.nome}>"
+  def get_id(self):
+    return self.codigo_assessor
 
-  
+ # def __repr__(self):
+ #   return f"<Assessor {'[ADMIN]' if self.is_admin else ''} A{self.assessor_codigo}:{self.nome}>"
 
 class Investimentos(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   ano_mes = db.Column(db.Date)
+  
   classificacao = db.Column(db.String(20))
   produto = db.Column(db.String(50))
   nivel1 = db.Column(db.String(200))
@@ -60,6 +63,7 @@ class Previdencia(db.Model):
   # Dados Cliente
   id = db.Column(db.Integer, primary_key=True)
   ano_mes = db.Column(db.Date)
+
   tipo = db.Column(db.String(50))
   competencia = db.Column(db.Date)
   parceiro = db.Column(db.String(60))
@@ -81,13 +85,13 @@ class Previdencia(db.Model):
   taf_repasse_porcento = db.Column(db.Float)
   taf_receita = db.Column(db.Integer)
   
-  # 1a Aplicação Mensal
+  # 1a Aplicacao Mensal
   primeira_aplicacao_mensal_base = db.Column(db.Integer)
   primeira_aplicacao_mensal_repasse = db.Column(db.Float)
   primeira_aplicacao_mensal_receita = db.Column(db.Integer)
 
 
-  # Aportes/Prêmio
+  # Aportes/Premio
   aportes_base = db.Column(db.Integer)
   aportes_repasse_porcento = db.Column(db.Float)
   aportes_receita = db.Column(db.Integer)
@@ -99,7 +103,7 @@ class Previdencia(db.Model):
 
   # Receita
   receita_bruta_total = db.Column(db.Integer)
-  ir_sobre_receita_bruta = db.Column(db.Integer)
+  ir_sobre_receita_bruta = db.Column(db.Float)
   receita_liquida_total = db.Column(db.Integer)
   obs = db.Column(db.String(120))
 
@@ -108,6 +112,7 @@ class Previdencia(db.Model):
 class CoCorretagem(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   ano_mes = db.Column(db.Date)
+
   tipo = db.Column(db.String(30))
   competencia = db.Column(db.Date)
   parceiro = db.Column(db.String(60))
@@ -147,6 +152,7 @@ class CoCorretagem(db.Model):
 class IncentivoPrevidencia(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   ano_mes = db.Column(db.Date)
+
   mes_referencia = db.Column(db.Integer)
   status_docusign = db.Column(db.Boolean)
   codigo_escritorio = db.Column(db.Integer)
@@ -161,6 +167,7 @@ class IncentivoPrevidencia(db.Model):
 class BancoXP(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   ano_mes = db.Column(db.Date)
+
   competencia = db.Column(db.Date)
   codigo_escritorio = db.Column(db.Integer)
   parceiro = db.Column(db.String(60))
@@ -174,16 +181,31 @@ class BancoXP(db.Model):
   juros_aa = db.Column(db.Integer)
   comissao_escritorio_porcento_aa = db.Column(db.Integer)
   comissao_atualizada_acumulada = db.Column(db.Integer)
-  deducoes = db.Column(db.Integer)
+  deducoes = db.Column(db.Float)
   total_receita = db.Column(db.Integer)
 
+class Cambio(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  ano_mes = db.Column(db.Date)
 
-db.create_all()
+  codigo_cliente = db.Column(db.Integer)
+  tipo = db.Column(db.String(20))
+  data = db.Column(db.Date)
+  moeda = db.Column(db.String(5))
+  volume = db.Column(db.Integer)
+  receita = db.Column(db.Integer)
+  taxa_cliente = db.Column(db.Float)
+  taxa_base = db.Column(db.Float)
+  spread_aplicado = db.Column(db.Float)
+  codigo_assessor = db.Column(db.Integer)
+
+
 
 if __name__ == '__main__':
   import datetime
   from openpyxl import load_workbook
-  from parse import parse_investimentos, parse_previdencia, parse_co_corretagem, parse_excel
+  from parse import parse_investimentos, parse_previdencia, parse_co_corretagem, parse_excel, parse_cambio
+  
+  db.create_all()
   wb = load_workbook('sistema.xlsx')
-  ws = wb['Investimentos']
   date = datetime.date(2000,1,1)

@@ -3,3 +3,4 @@ database.db
 *.csv
 *.xlsx
 .DS_Store
+*.pyc
