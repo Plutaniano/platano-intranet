@@ -14,8 +14,8 @@ login_manager.init_app(app)
 from models import *
 
 @login_manager.user_loader
-def load_user(id):
-    user = db.session.query(Assessor).filter_by(id=id).first()
+def load_user(codigo_assessor):
+    user = db.session.query(Assessor).filter_by(codigo_assessor=codigo_assessor).first()
     return user
 
 # ------------------------
@@ -50,7 +50,7 @@ def consulta():
         form.ano_mes.choices.append((s, s))
     
     for i in assessores:
-        t = (i.id, 'A' + str(i.id) + ' - ' + i.nome)
+        t = (i.codigo_assessor, 'A' + str(i.codigo_assessor) + ' - ' + i.nome)
         form.assessores.choices.append(t)
 
     if request.method == 'GET':
@@ -72,7 +72,7 @@ def consulta():
             'bancoXP': BancoXP
         }
 
-        data = db.session.query(d[tabela]).filter_by(codigo_assessor=assessor.id, ano_mes=ano_mes)
+        data = db.session.query(d[tabela]).filter_by(codigo_assessor=assessor.codigo_assessor, ano_mes=ano_mes)
         return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, data=data, form=form, tabela=tabela)
 
 
@@ -94,7 +94,7 @@ def upload():
 @login_required
 def adicionarassessor():
     form = RegisterForm(request.form)
-    db.session.add(Assessor(id=form.id.data, nome=form.name.data, email=form.email.data))
+    db.session.add(Assessor(id=form.codigo_assessor.data, nome=form.name.data, email=form.email.data))
     db.session.commit()
     flash('Assessor adicionado com sucesso.')
     return redirect(url_for('admin'))
@@ -104,7 +104,7 @@ def adicionarassessor():
 @login_required
 def assessores():
     assessores = db.session.query(Assessor)
-    return render_template('pages/comissoes.html', assessores=assessores)
+    return render_template('pages/assessores.html', assessores=assessores)
 
 
 # ------------------------
@@ -117,7 +117,7 @@ def login():
 
     form = LoginForm(request.form)
     if form.validate_on_submit():
-        user = load_user(form.id.data)
+        user = load_user(form.codigo_assessor.data)
         if user is None or user.password != form.password.data:
             flash('Credenciais inválidas')
             return redirect(url_for('login'))
