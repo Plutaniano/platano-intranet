@@ -1,6 +1,8 @@
-__pycache__/
+*__pycache__/
 database.db
 *.csv
 *.xlsx
 .DS_Store
 *.pyc
+.vscode/
+.mypy_cache

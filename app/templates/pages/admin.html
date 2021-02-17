@@ -1,0 +1,18 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h3>Administração</h3>
+</div>
+<div class="col-md-6 offset-md-3 mt-5">
+   <br>
+   <form enctype="multipart/form-data" action="{{ url_for('views.upload') }}" method="POST">
+     <div class="form-group mt-3">
+       <label class="mr-2">Selecione o arquivo de sua planilha para inclui-la no banco de dados: </label>
+       {{ uploadform.mes_de_entrada(class_='datepicker', type='month') }}
+       {{ uploadform.planilha }}
+     </div>
+     <button type="submit" class="btn btn-primary">Enviar</button>
+   </form>
+</div>
+{% endblock %}

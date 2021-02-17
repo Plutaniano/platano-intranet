@@ -1,0 +1,30 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Assessores{% endblock %}
+{% block content %}
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Código A</th>
+        <th scope="col">Nome</th>
+        <th scope="col">RV</th>
+        <th scope="col">Alocação</th>
+        <th scope="col">Previdência</th>
+        <th scope="col">Seguros</th>
+        <th scope="col">Banco XP</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for i in assessores %}
+      <tr>
+        <th scope="row">A{{ i.codigo_a }}</th>
+        <td>{{ i.nome }}</td>
+        <td>{{ i.comissao_rv }}</td>
+        <td>{{ i.comissao_alocacao }}</td>
+        <td>{{ i.comissao_previdencia }}</td>
+        <td>{{ i.comissao_seguros }}</td>
+        <td>{{ i.comissao_bancoxp }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
