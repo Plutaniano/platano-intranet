@@ -51,14 +51,14 @@ class Previdencia(db.Model):
   obs = Column('Observação', String(120))
 
   showable_columns = [
-    (competencia, lambda x: x.strftime('%Y/%m')),
-    (tipo, lambda x: x),
-    (certificado, lambda x: x),
-    (codigo_cliente, lambda x: x),
-    (up, lambda x: x),
-    (produto, lambda x: x),
-    (receita_bruta_total, lambda x: round(0.01 * x, 2)),
-    (ir_sobre_receita_bruta, lambda x: x),
-    (receita_liquida_total, lambda x: round(0.01 * x, 2)),
-    (obs, lambda x: x),
+    (competencia, lambda x: x.strftime('%Y/%m'), ''),
+    (tipo, lambda x: x, ''),
+    (certificado, lambda x: x, ''),
+    (codigo_cliente, lambda x: x, ''),
+    (up, lambda x: x, ''),
+    (produto, lambda x: x, ''),
+    (receita_bruta_total, lambda x: round(0.01 * x, 2), '(R$)'),
+    (ir_sobre_receita_bruta, lambda x: x, '(R$)'),
+    (receita_liquida_total, lambda x: round(0.01 * x, 2), '(R$)'),
+    (obs, lambda x: x, ''),
   ]

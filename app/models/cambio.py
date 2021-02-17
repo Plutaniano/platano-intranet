@@ -19,13 +19,13 @@ class Cambio(db.Model):
   codigo_a = Column('Código A', Integer)
 
   showable_columns = [
-    (codigo_cliente, lambda x: x),
-    (tipo, lambda x: x),
-    (data, lambda x: x),
-    (moeda, lambda x: x),
-    (volume, lambda x: round(0.01 * x, 2)),
-    (receita, lambda x: round(0.01 * x, 2)),
-    (taxa_cliente, lambda x: round(0.01 * x, 2)),
-    (taxa_base, lambda x: round(0.01 * x)),
-    (spread_aplicado, lambda x: round(0.01 * x, 2))
+    (codigo_cliente, lambda x: x, ''),
+    (tipo, lambda x: x, ''),
+    (data, lambda x: x, ''),
+    (moeda, lambda x: x, ''),
+    (volume, lambda x: round(0.01 * x, 2), ''),
+    (receita, lambda x: round(0.01 * x, 2), '(R$)'),
+    (taxa_cliente, lambda x: round(0.01 * x, 2), '(%)'),
+    (taxa_base, lambda x: round(0.01 * x, 2), '(%)'),
+    (spread_aplicado, lambda x: round(x, 2), '(%)')
   ]

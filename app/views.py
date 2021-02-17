@@ -88,7 +88,7 @@ def consulta():
         }
 
         data = db.session                                               \
-                    .query(*(i[0] for i in d[tabela].showable_columns)) \
+                    .query(*(i[0] for i in d[tabela].showable_columns))\
                     .filter(
                         d[tabela].codigo_a == assessor.codigo_a,
                         d[tabela].mes_de_entrada == ano_mes
@@ -98,7 +98,7 @@ def consulta():
             text = query_to_csv(data, d[tabela], assessor.codigo_a)
             return Response(text, mimetype="text/csv", headers={"Content-disposition": "attachment; filename=tabela.csv"})
 
-        return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, data=data, form=form, tabela=tabela)
+        return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, data=data, form=form, tabela=d[tabela])
 
 
 

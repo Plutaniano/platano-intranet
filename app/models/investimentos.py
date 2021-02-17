@@ -40,14 +40,14 @@ class Investimentos(db.Model):
 
   showable_columns = [
     # (coluna, função para display)
-    (classificacao, lambda x: x),
-    (produto, lambda x: x),
-    (nivel1, lambda x: x),
-    (nivel2, lambda x: x),
-    (cliente, lambda x: x),
-    (data, lambda x: x.strftime('%Y/%m/%d')),
-    (receita_bruta, lambda x: round(0.01 * x, 2)),
-    (receita_liquida, lambda x: round(0.01 * x, 2)),
-    (comissao_escritorio_porcento, lambda x: round(100 * x, 2)),
-    (comissao_escritorio, lambda x: round(0.01 * x, 2)),
+    (classificacao, lambda x: x, ''),
+    (produto, lambda x: x, ''),
+    (nivel1, lambda x: x, ''),
+    (nivel2, lambda x: x, ''),
+    (cliente, lambda x: x, ''),
+    (data, lambda x: x.strftime('%Y/%m/%d'), ''),
+    (receita_bruta, lambda x: round(0.01 * x, 2), '(R$)'),
+    (receita_liquida, lambda x: round(0.01 * x, 2), '(R$)'),
+    (comissao_escritorio_porcento, lambda x: round(100 * x, 2), '(%)'),
+    (comissao_escritorio, lambda x: round(0.01 * x, 2), '(R$)'),
   ]

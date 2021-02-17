@@ -19,8 +19,8 @@ class IncentivoPrevidencia(db.Model):
   adiantamento_previdencia = Column('Adiantamento da Previdência', Integer)
 
   showable_columns = [
-    (codigo_cliente, lambda x: x),
-    (certificado, lambda x: x),
-    (movimentacao_cliente, lambda x: round(0.01 * x, 2)),
-    (adiantamento_previdencia, lambda x: round(0.01 * x, 2))
+    (codigo_cliente, lambda x: x, ''),
+    (certificado, lambda x: x, ''),
+    (movimentacao_cliente, lambda x: round(0.01 * x, 2), '(R$)'),
+    (adiantamento_previdencia, lambda x: '%.2f' % (x * 0.01), '(R$)')
   ]

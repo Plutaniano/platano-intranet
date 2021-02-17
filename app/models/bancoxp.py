@@ -25,14 +25,14 @@ class BancoXP(db.Model):
   total_receita = Column('Receita Total', Integer)
 
   showable_columns = [
-    (codigo_cliente, lambda x: x),
-    (produto, lambda x: x),
-    (data_contratacao, lambda x: x.strftime('%Y/%m/%d')),
-    (data_vencimento, lambda x: x.strftime('%Y/%m/%d')),
-    (valor_contratado, lambda x: round(0.01 * x, 2)),
-    (juros_aa, lambda x: round(100 * x, 2)),
-    (comissao_escritorio_porcento_aa, lambda x: round(100 * x, 2)),
-    (comissao_atualizada_acumulada, lambda x: round(0.01 * x, 2)),
-    (deducoes, lambda x: 100 * x),
-    (total_receita, lambda x: round(0.01 * x, 2))
+    (codigo_cliente, lambda x: x, ''),
+    (produto, lambda x: x, ''),
+    (data_contratacao, lambda x: x.strftime('%Y/%m/%d'), ''),
+    (data_vencimento, lambda x: x.strftime('%Y/%m/%d'), ''),
+    (valor_contratado, lambda x: round(0.01 * x, 2), '(R$)'),
+    (juros_aa, lambda x: round(100 * x, 2), '(%)'),
+    (comissao_escritorio_porcento_aa, lambda x: round(100 * x, 2), '(%aa)'),
+    (comissao_atualizada_acumulada, lambda x: round(0.01 * x, 2), '(R$)'),
+    (deducoes, lambda x: 100 * x, '(R$)'),
+    (total_receita, lambda x: round(0.01 * x, 2), '(R$)')
   ]

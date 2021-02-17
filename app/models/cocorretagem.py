@@ -44,13 +44,13 @@ class CoCorretagem(db.Model):
   obs = Column('Observações', String(100))
 
   showable_columns = [
-    (tipo, lambda x: x),
-    (certificado, lambda x: x),
-    (codigo_cliente, lambda x: x),
-    (produto, lambda x: x),
-    (data_emissao, lambda x: x.strftime('%Y/%m')),
-    (aportes_base, lambda x: x),
-    (aportes_repasse_porcento, lambda x: x),
-    (aportes_receita, lambda x: x),
-    (receita_total, lambda x: round(0.01 * x, 2))
+    (tipo, lambda x: x, ''),
+    (certificado, lambda x: x, ''),
+    (codigo_cliente, lambda x: x, ''),
+    (produto, lambda x: x, ''),
+    (data_emissao, lambda x: x.strftime('%Y/%m'), ''),
+    (aportes_base, lambda x: x, '(R$)'),
+    (aportes_repasse_porcento, lambda x: x, '(%)'),
+    (aportes_receita, lambda x: x, '(R$)'),
+    (receita_total, lambda x: round(0.01 * x, 2), '(R$)')
   ]
