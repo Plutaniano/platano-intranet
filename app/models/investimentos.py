@@ -20,23 +20,23 @@ class Investimentos(db.Model):
   receita_bruta = Column('Receita Bruta', Integer)
   receita_liquida = Column('Receita Líquida', Integer)
   comissao_escritorio = Column('Comissão do Escritório', Integer)
-  comissao_escritorio_porcento = Column('Comissão do Escritório (%)', Float) 
+  comissao_escritorio_porcento = Column('Comissão Relativa do Escritório', Float) 
   
   codigo_a = Column('Código A', Integer)
-  assessor_direto_comissao_porcento = Column('Assessor Direto Comissão (%)', Integer)
-  assessor_direto_comissao = Column('Assessor Direto Comissão (R$)', Integer)
+  assessor_direto_comissao_porcento = Column('Assessor Direto', Integer)
+  assessor_direto_comissao = Column('Assessor Direto Comissão', Integer)
 
   assessor_indireto1_codigo = Column('Assessor Indireto 1 Código', Integer)
-  assessor_indireto1_comissao_porcento = Column('Assessor Indireto 1 Comissão (%)', Integer)
-  assessor_indireto1_comissao = Column('Assessor Indireto 1 Comissão (R$)', Integer)
+  assessor_indireto1_comissao_porcento = Column('Assessor Indireto 1', Integer)
+  assessor_indireto1_comissao = Column('Assessor Indireto 1 Comissão', Integer)
 
   assessor_indireto2_codigo = Column('Assessor Indireto 2 Código', Integer)
-  assessor_indireto2_comissao_porcento = Column('Assessor Indireto 2 Comissão (%)', Integer)
-  assessor_indireto2_comissao = Column('Assessor Indireto 2 Comissão (R$)', Integer)
+  assessor_indireto2_comissao_porcento = Column('Assessor Indireto 2', Integer)
+  assessor_indireto2_comissao = Column('Assessor Indireto 2 Comissão', Integer)
 
   assessor_indireto3_codigo = Column('Assessor Indireto 3 Código', Integer)
-  assessor_indireto3_comissao_porcento = Column('Assessor Indireto 3 Comissão (%)', Integer)
-  assessor_indireto3_comissao = Column('Assessor Indireto 3 Comissão (R$)', Integer)
+  assessor_indireto3_comissao_porcento = Column('Assessor Indireto 3', Integer)
+  assessor_indireto3_comissao = Column('Assessor Indireto 3 Comissão', Integer)
 
   showable_columns = [
     # (coluna, função para display)
@@ -46,8 +46,8 @@ class Investimentos(db.Model):
     (nivel2, lambda x: x, ''),
     (cliente, lambda x: x, ''),
     (data, lambda x: x.strftime('%Y/%m/%d'), ''),
-    (receita_bruta, lambda x: round(0.01 * x, 2), '(R$)'),
-    (receita_liquida, lambda x: round(0.01 * x, 2), '(R$)'),
-    (comissao_escritorio_porcento, lambda x: round(100 * x, 2), '(%)'),
-    (comissao_escritorio, lambda x: round(0.01 * x, 2), '(R$)'),
+    (receita_bruta, lambda x: '%.2f' % (0.01 * x), '(R$)'),
+    (receita_liquida, lambda x: '%.2f' % (0.01 * x), '(R$)'),
+    (comissao_escritorio_porcento, lambda x: '%.0f' % (100 * x), '(%)'),
+    (comissao_escritorio, lambda x: '%.2f' % (0.01 * x), '(R$)'),
   ]

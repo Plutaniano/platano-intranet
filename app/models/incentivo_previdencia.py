@@ -21,6 +21,6 @@ class IncentivoPrevidencia(db.Model):
   showable_columns = [
     (codigo_cliente, lambda x: x, ''),
     (certificado, lambda x: x, ''),
-    (movimentacao_cliente, lambda x: round(0.01 * x, 2), '(R$)'),
+    (movimentacao_cliente, lambda x: '%.2f' % (0.01 * x), '(R$)'),
     (adiantamento_previdencia, lambda x: '%.2f' % (x * 0.01), '(R$)')
   ]

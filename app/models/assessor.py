@@ -26,3 +26,14 @@ class Assessor(UserMixin, db.Model):
     def __repr__(self):
         user_type = 'ADMIN' if self.is_admin else 'USER'
         return f"<Assessor [{user_type}] A{self.codigo_a}:{self.nome}>"
+
+    showable_columns = [
+    (codigo_a, lambda x: 'A' + str(x), ''),
+    (nome, lambda x: x, ''),
+    (comissao_rv, lambda x: x, ''),
+    (comissao_alocacao, lambda x: x, ''),
+    (comissao_previdencia, lambda x: x, ''),
+    (comissao_seguros, lambda x: x, ''),
+    (comissao_bancoxp, lambda x: x, ''),
+    (comissao_cambio, lambda x: x, ''),
+  ]

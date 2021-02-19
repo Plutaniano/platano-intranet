@@ -57,8 +57,8 @@ class Previdencia(db.Model):
     (codigo_cliente, lambda x: x, ''),
     (up, lambda x: x, ''),
     (produto, lambda x: x, ''),
-    (receita_bruta_total, lambda x: round(0.01 * x, 2), '(R$)'),
-    (ir_sobre_receita_bruta, lambda x: round(x, 2), '(R$)'),
-    (receita_liquida_total, lambda x: round(0.01 * x, 2), '(R$)'),
+    (receita_bruta_total, lambda x: '%.2f' % (0.01 * x), '(R$)'),
+    (ir_sobre_receita_bruta, lambda x: '%.2f' % x, '(R$)'),
+    (receita_liquida_total, lambda x: '%.2f' % (0.01 * x), '(R$)'),
     (obs, lambda x: x, ''),
   ]

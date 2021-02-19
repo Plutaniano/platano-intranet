@@ -18,8 +18,8 @@ class BancoXP(db.Model):
   data_contratacao = Column('Data de Contratação', Date)
   data_vencimento = Column('Data de Vencimento', Date)
   valor_contratado = Column('Valor da Contratação', Integer)
-  juros_aa = Column('Juros a.a.', Integer)
-  comissao_escritorio_porcento_aa = Column('Comissão do Escritório a.a.', Integer)
+  juros_aa = Column('Juros', Integer)
+  comissao_escritorio_porcento_aa = Column('Comissão do Escritório', Integer)
   comissao_atualizada_acumulada = Column('Comissão Atualizada Acumulada', Integer)
   deducoes = Column('Deduções', Float)
   total_receita = Column('Receita Total', Integer)
@@ -29,10 +29,10 @@ class BancoXP(db.Model):
     (produto, lambda x: x, ''),
     (data_contratacao, lambda x: x.strftime('%Y/%m/%d'), ''),
     (data_vencimento, lambda x: x.strftime('%Y/%m/%d'), ''),
-    (valor_contratado, lambda x: round(0.01 * x, 2), '(R$)'),
-    (juros_aa, lambda x: round(100 * x, 2), '(%)'),
-    (comissao_escritorio_porcento_aa, lambda x: round(100 * x, 2), '(%aa)'),
-    (comissao_atualizada_acumulada, lambda x: round(0.01 * x, 2), '(R$)'),
-    (deducoes, lambda x: 100 * x, '(R$)'),
-    (total_receita, lambda x: round(0.01 * x, 2), '(R$)')
+    (valor_contratado, lambda x: '%.2f' % (0.01 * x), '(R$)'),
+    (juros_aa, lambda x: '%.2f' % (100 * x), '(%)'),
+    (comissao_escritorio_porcento_aa, lambda x: '%.2f' % (100 * x), '(%aa)'),
+    (comissao_atualizada_acumulada, lambda x: '%.2f' % (0.01 * x), '(R$)'),
+    (deducoes, lambda x: '%.2f' % (100 * x), '(R$)'),
+    (total_receita, lambda x: '%.2f' % (0.01 * x), '(R$)')
   ]

@@ -16,9 +16,9 @@ def parse_previdencia(ws: Worksheet, mes_de_entrada: date) -> None:
                                 competencia=row[1].value.date(),
                                 parceiro=row[2].value,
                                 codigo_a=row[3].value,
-                                certificado=row[4].value if isinstance(row[4].value, int) else 0,
+                                certificado=row[4].value if isinstance(row[4].value, int) else None,
                                 cpf=str(row[5].value),
-                                codigo_cliente=row[6].value if isinstance(row[6].value, int) else 0,
+                                codigo_cliente=row[6].value if isinstance(row[6].value, int) else None,
                                 up=str(row[7].value),
                                 
                                 # Dados do produto
@@ -52,7 +52,7 @@ def parse_previdencia(ws: Worksheet, mes_de_entrada: date) -> None:
                                 receita_bruta_total=int(100 * row[25].value),
                                 ir_sobre_receita_bruta=float(row[26].value),
                                 receita_liquida_total=int(100 * row[27].value),
-                                obs=str(row[28].value)
+                                obs=row[28].value or None
                                 )
             db.session.add(entry)
             db.session.commit()

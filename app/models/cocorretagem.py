@@ -24,23 +24,23 @@ class CoCorretagem(db.Model):
   reserva = Column('Reserva', Integer)
   tx_adm = Column('Taxa de Administração', Integer)
 
-  taf_base = Column('TAF Base (R$)', Integer)
-  taf_repasse_porcento = Column(' TAF Repasse (%)', Float)
-  taf_receita = Column('TAF Receita (R$)', Integer)
+  taf_base = Column('TAF Base', Integer)
+  taf_repasse_porcento = Column(' TAF Repasse', Float)
+  taf_receita = Column('TAF Receita', Integer)
 
-  primeira_aplicacao_mensal_base = Column('1a Aplicação Mensal Base (R$)', Integer)
-  primeira_aplicacao_mensal_repasse = Column('1a Aplicação Mensal Repasse (%)', Float)
-  primeira_aplicacao_mensal_receita = Column('1a Aplicação Mensal Receita (R$)', Integer)
+  primeira_aplicacao_mensal_base = Column('1a Aplicação Mensal Base', Integer)
+  primeira_aplicacao_mensal_repasse = Column('1a Aplicação Mensal Repasse', Float)
+  primeira_aplicacao_mensal_receita = Column('1a Aplicação Mensal Receita', Integer)
 
-  aportes_base = Column('Aportes Base (R$)', Integer)
-  aportes_repasse_porcento = Column('Aportes Repasse (%)', Float)
-  aportes_receita = Column('Aportes Receita (R$)', Integer)
+  aportes_base = Column('Aportes Base', Integer)
+  aportes_repasse_porcento = Column('Aportes Repasse', Float)
+  aportes_receita = Column('Aportes Receita', Integer)
 
-  portabilidade_base = Column('Portabilidade Base (R$)', Integer)
-  portabilidade_repasse_porcento = Column('Portabilidade Repasse (%)', Float)
-  portabilidade_receita = Column('Portabilidade Receita (R$)', Integer)
+  portabilidade_base = Column('Portabilidade Base', Integer)
+  portabilidade_repasse_porcento = Column('Portabilidade Repasse', Float)
+  portabilidade_receita = Column('Portabilidade Receita ', Integer)
 
-  receita_total = Column('Receita Total (R$)', Integer)
+  receita_total = Column('Receita Total', Integer)
   obs = Column('Observações', String(100))
 
   showable_columns = [
@@ -49,8 +49,8 @@ class CoCorretagem(db.Model):
     (codigo_cliente, lambda x: x, ''),
     (produto, lambda x: x, ''),
     (data_emissao, lambda x: x.strftime('%Y/%m'), ''),
-    (aportes_base, lambda x: x, '(R$)'),
-    (aportes_repasse_porcento, lambda x: x, '(%)'),
-    (aportes_receita, lambda x: x, '(R$)'),
-    (receita_total, lambda x: round(0.01 * x, 2), '(R$)')
+    (aportes_base, lambda x: '%.2f' % x, '(R$)'),
+    (aportes_repasse_porcento, lambda x: '%.0f' % x, '(%)'),
+    (aportes_receita, lambda x: '%.2f' % x, '(R$)'),
+    (receita_total, lambda x: '%.2f' % (0.01 * x), '(R$)')
   ]

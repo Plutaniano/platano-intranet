@@ -23,9 +23,9 @@ class Cambio(db.Model):
     (tipo, lambda x: x, ''),
     (data, lambda x: x, ''),
     (moeda, lambda x: x, ''),
-    (volume, lambda x: round(0.01 * x, 2), ''),
-    (receita, lambda x: round(0.01 * x, 2), '(R$)'),
-    (taxa_cliente, lambda x: round(0.01 * x, 2), '(%)'),
-    (taxa_base, lambda x: round(0.01 * x, 2), '(%)'),
-    (spread_aplicado, lambda x: round(x, 2), '(%)')
+    (volume, lambda x: '%.2f' % (0.01 * x), ''),
+    (receita, lambda x: '%.2f' % (0.01 * x), '(R$)'),
+    (taxa_cliente, lambda x: '%.2f' % (0.01 * x), '(%)'),
+    (taxa_base, lambda x: '%.2f' % (0.01 * x), '(%)'),
+    (spread_aplicado, lambda x: '%.2f' % x, '(%)')
   ]
