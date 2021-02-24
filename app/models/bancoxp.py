@@ -24,6 +24,16 @@ class BancoXP(db.Model):
   deducoes = Column('Deduções', Float)
   total_receita = Column('Receita Total', Integer)
 
+  @classmethod
+  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> int:
+    f'''\
+      Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
+      Não inclui cálculos de comissão.\
+    '''
+    query = db.session.query(cls.total_receita).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
+    total = sum(i[0] for i in query)
+    return total
+
   showable_columns = [
     (codigo_cliente, lambda x: x, ''),
     (produto, lambda x: x, ''),

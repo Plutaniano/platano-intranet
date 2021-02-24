@@ -1,0 +1,28 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Resumo{% endblock %}
+{% block content %}
+
+<table class="table table-hover table-striped table-sm">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>RV</th>
+      <th>Prêvidencia</th>
+      <th>Incentivo Prêvidencia</th>
+      <th>Banco XP</th>
+      <th>Cambio</th>
+      <th>Co-corretagem</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ current_user.nome }}</td>
+      <td>{{ data['investimentos'] }}</td>
+      <td>{{ data['previdencia'] }}</td>
+      <td>{{ data['incentivo_previdencia'] }}</td>
+      <td>{{ data['bancoxp'] }}</td>
+      <td>{{ data['cambio'] }}</td>
+      <td>{{ data['cocorretagem'] }}</td>
+    </tr>
+
+{% endblock %}

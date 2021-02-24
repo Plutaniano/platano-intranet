@@ -1,7 +1,6 @@
 {% extends 'layouts/main.html' %}
 {% block title %}Consulta{% endblock %}
 {% block content %}
-<script src="path_to/node_modules/tablefilter/dist/tablefilter/tablefilter.js"></script>
 <form accept-charset="UTF-8" action="{{ url_for('views.consulta') }}" method="POST">
     <div class="form-group mt-3">
         {{ form.ano_mes(class_='form-control first-input', required=true) }}

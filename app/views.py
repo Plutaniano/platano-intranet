@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from . import app
 import os
 from sqlalchemy import extract
-from .models import db, Assessor, Investimentos, IncentivoPrevidencia, BancoXP, Previdencia, Cambio, CoCorretagem
+from .models import *
 from .utils import query_to_csv
 import datedelta
 from .parser import parse_excel
@@ -100,6 +100,11 @@ def consulta():
 
         return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, data=data, form=form, tabela=d[tabela])
 
+@views.route('/resumo')
+@login_required
+def resumo():
+
+    return render_template('pages/resumo.html', data=data)
 
 
 # ------------------------

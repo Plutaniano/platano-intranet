@@ -49,6 +49,16 @@ class Previdencia(db.Model):
   ir_sobre_receita_bruta = Column('IR sobre Receita Bruta', Float)
   receita_liquida_total = Column('Receita Líquida Total', Integer)
   obs = Column('Observação', String(120))
+  
+  @classmethod
+  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> int:
+    f'''\
+      Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
+      Não inclui cálculos de comissão.\
+    '''
+    query = db.session.query(cls.receita_liquida_total).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
+    total = sum(i[0] for i in query)
+    return total
 
   showable_columns = [
     (competencia, lambda x: x.strftime('%Y/%m'), ''),
@@ -57,8 +67,8 @@ class Previdencia(db.Model):
     (codigo_cliente, lambda x: x, ''),
     (up, lambda x: x, ''),
     (produto, lambda x: x, ''),
-    (receita_bruta_total, lambda x: '%.2f' % (0.01 * x), '(R$)'),
-    (ir_sobre_receita_bruta, lambda x: '%.2f' % x, '(R$)'),
-    (receita_liquida_total, lambda x: '%.2f' % (0.01 * x), '(R$)'),
+    (receita_bruta_total, lambda x: round(0.01 * x, 2), '(R$)'),
+    (ir_sobre_receita_bruta, lambda x: round(x, 2), '(R$)'),
+    (receita_liquida_total, lambda x: round(0.01 * x, 2), '(R$)'),
     (obs, lambda x: x, ''),
   ]

@@ -18,6 +18,16 @@ class IncentivoPrevidencia(db.Model):
   movimentacao_cliente = Column('Movimentação Cliente', Integer)
   adiantamento_previdencia = Column('Adiantamento da Previdência', Integer)
 
+  @classmethod
+  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> int:
+    f'''\
+      Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
+      Não inclui cálculos de comissão.\
+    '''
+    query = db.session.query(cls.adiantamento_previdencia).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
+    total = sum(i[0] for i in query)
+    return total
+
   showable_columns = [
     (codigo_cliente, lambda x: x, ''),
     (certificado, lambda x: x, ''),

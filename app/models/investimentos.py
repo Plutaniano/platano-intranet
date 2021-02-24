@@ -38,8 +38,18 @@ class Investimentos(db.Model):
   assessor_indireto3_comissao_porcento = Column('Assessor Indireto 3', Integer)
   assessor_indireto3_comissao = Column('Assessor Indireto 3 Comissão', Integer)
 
+  @classmethod
+  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> int:
+    f'''\
+      Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
+      Não inclui cálculos de comissão.\
+    '''
+    query = db.session.query(cls.comissao_escritorio).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
+    total = sum(i[0] for i in query)
+    return total
+
   showable_columns = [
-    # (coluna, função para display)
+    # (coluna, função para display, unidade)
     (classificacao, lambda x: x, ''),
     (produto, lambda x: x, ''),
     (nivel1, lambda x: x, ''),
@@ -49,5 +59,5 @@ class Investimentos(db.Model):
     (receita_bruta, lambda x: '%.2f' % (0.01 * x), '(R$)'),
     (receita_liquida, lambda x: '%.2f' % (0.01 * x), '(R$)'),
     (comissao_escritorio_porcento, lambda x: '%.0f' % (100 * x), '(%)'),
-    (comissao_escritorio, lambda x: '%.2f' % (0.01 * x), '(R$)'),
+    (assessor_direto_comissao, lambda x: '%.2f' % (0.01 * x), '(R$)'),
   ]
