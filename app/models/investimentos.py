@@ -58,6 +58,4 @@ class Investimentos(db.Model):
     (data, lambda x: x.strftime('%Y/%m/%d'), ''),
     (receita_bruta, lambda x: '%.2f' % (0.01 * x), '(R$)'),
     (receita_liquida, lambda x: '%.2f' % (0.01 * x), '(R$)'),
-    (comissao_escritorio_porcento, lambda x: '%.0f' % (100 * x), '(%)'),
-    (assessor_direto_comissao, lambda x: '%.2f' % (0.01 * x), '(R$)'),
   ]

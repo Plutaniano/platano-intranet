@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, url_for, redirect, Respon
 from flask_login import login_required, current_user, logout_user, login_user
 from werkzeug.utils import secure_filename
 from . import login_manager
-from .forms import ForgotForm, QueryForm, LoginForm, RegisterForm, UploadForm
+from .forms import ForgotForm, QueryForm, LoginForm, RegisterForm, UploadForm, ResumoForm
 import datetime
 from sqlalchemy.orm import sessionmaker
 from . import app
@@ -87,7 +87,7 @@ def consulta():
             'cambio': Cambio
         }
 
-        data = db.session                                               \
+        data = db.session\
                     .query(*(i[0] for i in d[tabela].showable_columns))\
                     .filter(
                         d[tabela].codigo_a == assessor.codigo_a,
@@ -96,31 +96,44 @@ def consulta():
 
         if request.form.get('action')== 'Exportar':
             text = query_to_csv(data, d[tabela], assessor.codigo_a)
-            return Response(text, mimetype="text/csv", headers={"Content-disposition": "attachment; filename=tabela.csv"})
+            return Response(text,
+                            mimetype="text/csv",
+                            headers={"Content-disposition": "attachment; filename=tabela.csv"})
 
         return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, data=data, form=form, tabela=d[tabela])
 
 @views.route('/resumo')
 @login_required
 def resumo():
+    form = ResumoForm()
+    # if request.method == 'GET':
+    #     return 'Pagina em branco com form'
 
-    return render_template('pages/resumo.html', data=data)
+    if request.method == 'GET':
+        form = ResumoForm(request.form)
+        mes_de_entrada = form.ano_mes.data
+        valores = current_user.resumo(datetime.date(2021,1,1))
+            
+        total = valores.pop('Receita Liquida')
+        #implementar valores adicionais (tx CVM, PAN, erros op., ...)
+        return render_template('pages/resumo.html', valores=valores, total=total, form=form)
+
+    # return render_template('pages/resumo.html', data=data)
 
 
 # ------------------------
 #      admin pages
 # ------------------------
-@views.route('/admin')
+@views.route('/inserir_tabela')
 @login_required
-def admin():
-    return render_template('pages/admin.html', uploadform=UploadForm())
-
+def inserir_tabela():
+    return render_template('pages/inserir_tabela.html', uploadform=UploadForm())
 
 
 @views.route('/upload', methods=['POST'])
 @login_required
 def upload():
-    form = UploadForm()
+    form = UploadForm(request.form)
     f = form.planilha.data
     date = form.mes_de_entrada.data
     filename = secure_filename(f.filename)
@@ -128,14 +141,14 @@ def upload():
     results = parse_excel('/tmp/' + filename, date)
     results = ', '.join(i[0] for i in results if i[1])
     flash('Tabelas processadas: ' + results)
-    return redirect(url_for('views.admin'))
+    return redirect(url_for('views.inserir_tabela'))
 
 
-@views.route('/assessores')
+@views.route('/comissoes')
 @login_required
-def assessores():
+def comissoes():
     assessores = db.session.query(Assessor)
-    return render_template('pages/assessores.html', assessores=assessores)
+    return render_template('pages/comissoes.html', assessores=assessores)
 
 
 # ------------------------

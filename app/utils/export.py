@@ -5,7 +5,6 @@ import csv
 from unidecode import unidecode
 
 
-
 def query_to_csv(queries: BaseQuery, tabela: db.Model, user: str) -> str:
     queries = list(queries)
     filename = f'/tmp/{user}_{datetime.datetime.now().isoformat()}.csv'

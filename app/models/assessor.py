@@ -4,7 +4,6 @@ from ..models import *
 from flask_login import UserMixin
 from sqlalchemy import Integer, String, Float, Boolean, Column
 from sqlalchemy.ext.declarative import declarative_base
-from . import db
 import datetime
 
 
@@ -29,15 +28,31 @@ class Assessor(UserMixin, db.Model):
         Retorna um dicionário contendo todas as informações necessárias para apresentar
         a página resumo para o assessor.\
         '''
-        tabelas = current_app.config['TABELAS_COM_RECEITA']
+        t = current_app.config['TABELAS_COM_RECEITA']
+        impostos = current_app.config['IMPOSTOS']
 
         d = {
-            'receita_total': 0
+            'Investimentos': t['investimentos'].receita_do_escritorio(self.codigo_a, mes_de_entrada),
+            'Previdencia': t['previdencia'].receita_do_escritorio(self.codigo_a, mes_de_entrada),
+            'Banco XP': t['banco_xp'].receita_do_escritorio(self.codigo_a, mes_de_entrada),
+            'Incentivo Previdencia': t['incentivo_previdencia'].receita_do_escritorio(self.codigo_a, mes_de_entrada),
+            'Cambio': t['cambio'].receita_do_escritorio(self.codigo_a, mes_de_entrada),
+            'Co-corretagem': t['cocorretagem'].receita_do_escritorio(self.codigo_a, mes_de_entrada)
         }
 
-        for tabela in tabelas:
-            d[tabela] = tabela.receita_do_escritorio(self.codigo_a, mes_de_entrada)
-            d['receita_total'] += d[tabela]
+        d['Receita Bruta'] = sum(d.values())
+
+        liquida = d['Receita Bruta']
+
+        for nome, taxa in impostos.items():
+            d[nome] = d['Receita Bruta'] * taxa * -1
+            liquida  += d[nome]
+        
+        d['Receita Liquida'] = liquida
+
+        for key, value in d.items():
+            value = float(value * 0.01)
+            d[key] =  value
 
         return d
 

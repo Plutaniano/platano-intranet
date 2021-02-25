@@ -17,11 +17,11 @@ IMPOSTOS = {
     'CSLL': 0.0288
 }
 
-TABELAS_COM_RECEITA = [
-    Investimentos,
-    Previdencia,
-    CoCorretagem,
-    BancoXP,
-    Cambio,
-    IncentivoPrevidencia
-]
+TABELAS_COM_RECEITA = {
+    'investimentos': Investimentos,
+    'previdencia': Previdencia,
+    'cocorretagem': CoCorretagem,
+    'banco_xp': BancoXP,
+    'cambio': Cambio,
+    'incentivo_previdencia': IncentivoPrevidencia
+}

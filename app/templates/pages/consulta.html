@@ -1,6 +1,10 @@
 {% extends 'layouts/main.html' %}
 {% block title %}Consulta{% endblock %}
 {% block content %}
+{% endblock %}
+<div class="page-header">
+  <h4>Consulta</h4>
+</div>
 <form accept-charset="UTF-8" action="{{ url_for('views.consulta') }}" method="POST">
     <div class="form-group mt-3">
         {{ form.ano_mes(class_='form-control first-input', required=true) }}
@@ -16,6 +20,7 @@
     </div>
 </form>
 <br>
+
 {% if tabela %}
 <table class="table table-hover table-striped table-sm">
   <thead>
@@ -37,5 +42,3 @@
   </tbody>
 </table>
 {% endif %}
-
-{% endblock %}

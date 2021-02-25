@@ -1,28 +1,42 @@
 {% extends 'layouts/main.html' %}
 {% block title %}Resumo{% endblock %}
 {% block content %}
+<div class="page-header">
+  <h4>Resumo</h4>
+</div>
+
+{% if form %}
+<form accept-charset="UTF-8" action="{{ url_for('views.resumo') }}" method="POST">
+  <div class="form-group mt-3">
+      {{ form.ano_mes(class_='form-control first-input', required=true) }}
+      <br>
+      <div {% if not current_user.is_admin %} class="hidden" {% endif %}>
+      {{ form.assessores(class_='form-control', required=true) }}
+      <br>
+      <input type="submit" name="action" value="Consultar" class="btn btn-primary btn-lg">
+  </div>
+</form>
+{% endif%}
 
 <table class="table table-hover table-striped table-sm">
   <thead>
     <tr>
       <th>Nome</th>
-      <th>RV</th>
-      <th>Prêvidencia</th>
-      <th>Incentivo Prêvidencia</th>
-      <th>Banco XP</th>
-      <th>Cambio</th>
-      <th>Co-corretagem</th>
+      <th>Receita (R$)</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>{{ current_user.nome }}</td>
-      <td>{{ data['investimentos'] }}</td>
-      <td>{{ data['previdencia'] }}</td>
-      <td>{{ data['incentivo_previdencia'] }}</td>
-      <td>{{ data['bancoxp'] }}</td>
-      <td>{{ data['cambio'] }}</td>
-      <td>{{ data['cocorretagem'] }}</td>
-    </tr>
+      {% for key, value in valores.items() %}
+      <tr>
+        <td>{{ key }}</td>
+        <td class="text-right">{{ "{:,.2f}".format(value) }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td><b>Total</b></td>
+        <td><b>{{ "R${:,.2f}".format(total) }}</b></td>
+      </tr>
+    </tbody>
+</table>
 
 {% endblock %}
