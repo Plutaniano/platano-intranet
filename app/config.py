@@ -25,3 +25,12 @@ TABELAS_COM_RECEITA = {
     'cambio': Cambio,
     'incentivo_previdencia': IncentivoPrevidencia
 }
+
+DEFAULT_COMISSOES = {
+    'RV': 0.25,
+    'alocacao': 0.45,
+    'previdencia': 0.45,
+    'seguros': 0.25,
+    'banco_xp': 0.45,
+    'cambio': 0.25
+}

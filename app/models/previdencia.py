@@ -4,9 +4,11 @@ from . import db
 class Previdencia(db.Model):
   __tablename__ = 'previdencia'
   __displayname__ = 'Previdência'
+
   # Dados Cliente
   id = Column('ENTRY_ID', Integer, primary_key=True)
   mes_de_entrada = Column('MES DE ENTRADA', Date)
+  comissionamento = Column('COMISSIONAMENTO', String(20), default='previdencia')
 
   tipo = Column('Tipo', String(50))
   competencia = Column('Competencia', Date)

@@ -6,6 +6,7 @@ class Cambio(db.Model):
   __displayname__ = 'Câmbio'
   id = Column('ENTRY ID', Integer, primary_key=True)
   mes_de_entrada = Column('MES DE ENTRADA', Date)
+  comissionamento = Column('COMISSIONAMENTO', String(20), default='cambio')
 
   codigo_cliente = Column('Código do Cliente', Integer)
   tipo = Column('Tipo', String(20))

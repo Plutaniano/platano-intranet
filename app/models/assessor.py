@@ -1,4 +1,4 @@
-from typing import Union, Dict
+from typing import Union, Dict, Set
 from flask import current_app
 from ..models import *
 from flask_login import UserMixin
@@ -23,7 +23,18 @@ class Assessor(UserMixin, db.Model):
     comissao_cambio = Column('Comissão Câmbio', Float, default=0.0)
     obs = Column('Observações', String(120), default=None)
 
-    def resumo(self, mes_de_entrada: datetime.date) -> Dict:
+    def meses_com_entrada(self) -> Set[datetime.date]:
+        tabelas = current_app.config['TABELAS_COM_RECEITA']
+        meses_com_entrada =set()
+
+        for tabela in tabelas.values():
+            q = db.session.query(tabela.mes_de_entrada).filter_by(codigo_a = self.codigo_a).distinct()
+            for i in q:
+                meses_com_entrada.add(i.mes_de_entrada)
+        
+        return meses_com_entrada
+
+    def resumo(self, mes_de_entrada: datetime.date) -> Dict[str, int]:
         '''\
         Retorna um dicionário contendo todas as informações necessárias para apresentar
         a página resumo para o assessor.\

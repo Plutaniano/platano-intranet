@@ -7,6 +7,7 @@ class CoCorretagem(db.Model):
   __displayname__ = 'Co-corretagem'
   id = Column('ENTRY ID', Integer, primary_key=True)
   mes_de_entrada = Column('MES DE ENTRADA', Date)
+  comissionamento = Column('COMISSIONAMENTO', String(20), default='cocorretagem')
 
   tipo = Column('Tipo', String(30))
   competencia = Column('Competência', Date)

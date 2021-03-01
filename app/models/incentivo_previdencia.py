@@ -7,6 +7,7 @@ class IncentivoPrevidencia(db.Model):
   __displayname__ = 'Incentivo Previdência'
   id = Column('ENTRY ID', Integer, primary_key=True)
   mes_de_entrada = Column('MES DE ENTRADA', Date)
+  comissionamento = Column('COMISSIONAMENTO', String(21), default='incentivo_previdencia')
 
   mes_referencia = Column('Mês de Referência', Date)
   status_docusign = Column('Status Docusign', Boolean)

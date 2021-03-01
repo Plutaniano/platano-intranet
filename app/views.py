@@ -133,7 +133,7 @@ def inserir_tabela():
 @views.route('/upload', methods=['POST'])
 @login_required
 def upload():
-    form = UploadForm(request.form)
+    form = UploadForm()
     f = form.planilha.data
     date = form.mes_de_entrada.data
     filename = secure_filename(f.filename)

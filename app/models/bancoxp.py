@@ -7,6 +7,7 @@ class BancoXP(db.Model):
   __displayname__ = 'Banco XP'
   id = Column('ENTRY ID', Integer, primary_key=True)
   mes_de_entrada = Column('MES DE ENTRADA', Date)
+  comissionamento = Column('COMISSIONAMENTO', String(20), default='banco_xp')
 
   competencia = Column('Competência', Date)
   codigo_escritorio = Column('Código do Escritório', Integer)
