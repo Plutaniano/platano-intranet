@@ -12,30 +12,96 @@
       <div {% if not current_user.is_admin %} class="hidden" {% endif %}>
       {{ form.assessores(class_='form-control', required=true) }}
       <br>
+      </div>
       <input type="submit" name="action" value="Consultar" class="btn btn-primary btn-lg">
   </div>
 </form>
 <br>
 
-<table class="table table-hover table-striped table-sm">
+{% if resumo %}
+<table class='table table-hover table-striped table-bordered table-sm'>
   <thead>
     <tr>
-      <th scope="col">Nome</th>
-      <th>Receita (R$)</th>
+      <th>Segmento</th>
+      <th>Descrição</th>
+      <th>Bruto XP</th>
+      <th>Líquido XP</th>
+      <th>Escritório</th>
+      <th>Comissão</th>
+      <th>Total (R$)</th>
     </tr>
   </thead>
   <tbody>
-      {% for key, value in valores.items() %}
-      <tr>
-        <td>{{ key }}</td>
-        <td class="text-right">{{ "{:,.2f}".format(value) }}</td>
-      </tr>
-      {% endfor %}
-      <tr>
-        <td><b>Total</b></td>
-        <td><b>{{ "R${:,.2f}".format(total) }}</b></td>
-      </tr>
-    </tbody>
+    <tr>
+      <td rowspan="2">Investimentos</td>
+      <td>Receita</td>
+      <td>{{ resumo['Investimentos']['Receita']['Bruto XP'] }}</td>
+      <td>{{ resumo['Investimentos']['Receita']['Líquido XP'] }}</td>
+      <td>{{ resumo['Investimentos']['Receita']['Escritório'] }}</td>
+      <td>{{ "{0:,.2f}".format(resumo['Investimentos']['Comissão'] * 100) }} %</td>
+      <td>{{ "{0:,.2f}".format(resumo['Investimentos']['Assessor'] * 0.01) }}</td>
+    </tr>
+    <tr>
+      <td colspan="4">Descontos</td>
+      <td>100 %</td>
+      <td>{{ "{0:,.2f}".format(0.01 * resumo['Investimentos']['Descontos']) }}</td>
+    </tr>
+    <tr>
+      <td rowspan="2">Previdencia</td>
+      <td>Receita</td>
+      <td>{{ resumo['Previdencia']['Receita']['Bruto XP'] }}</td>
+      <td>{{ resumo['Previdencia']['Receita']['Líquido XP'] }}</td>
+      <td>{{ resumo['Previdencia']['Receita']['Escritório'] }}</td>
+      <td>{{ "%.2f" | format(resumo['Previdencia']['Comissão'] * 100) }} %</td>
+      <td>{{ "{0:,.2f}".format(resumo['Previdencia']['Assessor'] * 0.01) }}</td>
+    </tr>
+    <tr>
+      <td colspan="4">Incentivo Prêvidencia</td>
+      <td>100 %</td>
+      <td>{{ "{0:,.2f}".format(0.01 * resumo['Previdencia']['Descontos']) }}</td>
+    <tr>
+      <td>Câmbio</td>
+      <td>Receita</td>
+      <td>-</td>
+      <td>-</td>
+      <td>{{ resumo['Cambio']['Receita']['Escritório'] }}</td>
+      <td>{{ "{0:,.2f}".format(resumo['Cambio']['Comissão'] * 100) }} %</td>
+      <td>{{ "{0:,.2f}".format(resumo['Cambio']['Assessor'] * 0.01) }}</td>
+    </tr>
+    <tr>
+      <td>Banco XP</td>
+      <td>Receita</td>
+      <td>{{ resumo['Banco XP']['Receita']['Bruto XP'] }}</td>
+      <td>{{ resumo['Banco XP']['Receita']['Líquido XP'] }}</td>
+      <td>{{ resumo['Banco XP']['Receita']['Escritório'] }}</td>
+      <td>{{ "{0:.2%}".format(resumo['Banco XP']['Comissão']) }}</td>
+      <td>{{ "{0:,.2f}".format(resumo['Banco XP']['Assessor'] * 0.01) }}</td>
+    </tr>
+    <tr>
+      <td>Co-corretagem</td>
+      <td>Receita</td>
+      <td>{{ resumo['Co-corretagem']['Receita']['Bruto XP'] }}</td>
+      <td>{{ resumo['Co-corretagem']['Receita']['Líquido XP'] }}</td>
+      <td>{{ resumo['Co-corretagem']['Receita']['Escritório'] }}</td>  
+      <td>{{ "{0:.2%}".format(resumo['Co-corretagem']['Comissão']) }}</td>
+      <td>{{ "{0:,.2f}".format(resumo['Co-corretagem']['Assessor'] * 0.01) }}</td>
+    </tr>
+    <tr>
+      <td colspan="5"></td>
+      <td><b>Total Bruto</b></td>
+      <td><b>{{ "{0:,.2f}".format(resumo['Total Bruto'] * 0.01) }}</b></td>
+    </tr>
+    <tr>
+      <td colspan="5"></td>
+      <td><b>Impostos (20%)</b></td>
+      <td><b>{{ "{0:,.2f}".format(resumo['Impostos'] * -0.01) }}</b></td>
+    </tr>
+    <tr>
+      <td colspan="5"></td>
+      <td><b>Total Líquido</b></td>
+      <td><b>{{ "{0:,.2f}".format(resumo['Total Líquido'] * 0.01) }}</b></td>
+    </tr>
+  </tbody>
 </table>
-
+{% endif %}
 {% endblock %}

@@ -1,5 +1,6 @@
 from sqlalchemy import Integer, String, Float, Boolean, Date, Column
-from . import db
+from . import db, Assessor
+from typing import Dict
 
 
 class IncentivoPrevidencia(db.Model):
@@ -20,14 +21,20 @@ class IncentivoPrevidencia(db.Model):
   adiantamento_previdencia = Column('Adiantamento da Previdência', Integer)
 
   @classmethod
-  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> int:
+  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> Dict:
     f'''\
       Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
       Não inclui cálculos de comissão.\
     '''
+    receita = {}
+
     query = db.session.query(cls.adiantamento_previdencia).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
-    total = sum(i[0] for i in query)
-    return total
+    
+    receita['Bruto XP'] = 0
+    receita['Líquido XP'] = 0
+    receita['Escritório'] = sum(i[0] for i in query)
+
+    return receita
 
   showable_columns = [
     (codigo_cliente, lambda x: x, ''),

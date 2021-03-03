@@ -1,5 +1,6 @@
 from sqlalchemy import Integer, String, Float, Boolean, Date, Column
-from . import db
+from . import db, Assessor
+from typing import Dict
 
 
 class BancoXP(db.Model):
@@ -26,14 +27,22 @@ class BancoXP(db.Model):
   total_receita = Column('Receita Total', Integer)
 
   @classmethod
-  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> int:
+  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> Dict:
     f'''\
       Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
       Não inclui cálculos de comissão.\
     '''
-    query = db.session.query(cls.total_receita).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
-    total = sum(i[0] for i in query)
-    return total
+    receita = {}
+
+    query = db.session.query(cls.comissao_atualizada_acumulada, cls.total_receita).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
+    
+    receita['Bruto XP'] = 0
+    receita['Líquido XP'] = sum(i[0] for i in query)
+    receita['Escritório'] = sum(i[1] for i in query)
+    receita['Comissão'] = Assessor.query.get(codigo_a).comissao_bancoxp
+    receita['Total'] = 0
+
+    return receita
 
   showable_columns = [
     (codigo_cliente, lambda x: x, ''),

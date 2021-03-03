@@ -24,8 +24,8 @@
 <table class="table table-hover table-striped table-sm">
   <thead>
     <tr>
-      {% for i in tabela.showable_columns %}
-      <th scope="col" class="text-center">{{ i[0].name + ' ' + i[2] }}</th>
+      {% for col, _, unidade in tabela.showable_columns %}
+      <th scope="col" class="text-center">{{ col.name + ' ' + unidade }}</th>
       {% endfor %}
     </tr>
   </thead>

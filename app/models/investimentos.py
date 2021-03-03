@@ -1,6 +1,7 @@
 from sqlalchemy import Integer, String, Float, Boolean, Date, Column
-from . import db
+from . import db, Assessor
 from flask import current_app
+from typing import Dict
 
 
 
@@ -41,15 +42,28 @@ class Investimentos(db.Model):
   assessor_indireto3_comissao = Column('Assessor Indireto 3 Comissão', Integer)
 
   @classmethod
-  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> int:
+  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> Dict:
     f'''\
       Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
       Não inclui cálculos de comissão.\
     '''
-    query = db.session.query(cls.comissao_escritorio).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
-    total = sum(i[0] for i in query)
-    return total
+    receita = {}
+
+    query = db.session.query(cls.receita_bruta, cls.receita_liquida, cls.comissao_escritorio).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
+
+    receita['Bruto XP'] = sum(i[0] for i in query)
+    receita['Líquido XP'] = sum(i[1] for i in query)
+    receita['Escritório'] = sum(i[2] for i in query)
+
+    return receita
   
+  @classmethod
+  def descontos(cls, codigo_a: int, mes_de_entrada: Date) -> int:
+    query = db.session.query(cls.comissao_escritorio)\
+                        .filter(cls.codigo_a == codigo_a)\
+                        .filter(cls.comissao_escritorio < 0)\
+                        .filter(cls.mes_de_entrada == mes_de_entrada)
+    return sum(i[0] for i in query)
 
   showable_columns = [
     # (coluna, função para display, unidade)

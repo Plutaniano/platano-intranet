@@ -1,0 +1,76 @@
+<table>
+    <thead>
+      <tr>
+        <th>Segmento</th>
+        <th>Descrição</th>
+        <th>Bruto XP</th>
+        <th>Líquido XP</th>
+        <th>Escritório</th>
+        <th>Comissão</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="2">Investimentos</td>
+        <td>Produtos</td>
+        <td>{{ resumo['Produtos']['Bruto XP'] }}</td>
+        <td>{{ resumo['Produtos']['Líquido XP'] }}</td>
+        <td>{{ resumo['Produtos']['Escritório'] }}</td>
+        <td>{{ current_user.comissao_rv }}</td>
+        <td>soma</td>
+      </tr>
+      <tr>
+        <td>Descontos</td>
+        <td>{{ resumo['Descontos']['Bruto XP'] }}</td>
+        <td>{{ resumo['Descontos']['Líquido XP'] }}</td>
+        <td>{{ resumo['Descontos']['Escritório'] }}</td>
+        <td>100%</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td rowspan="2">Previdencia</td>
+        <td>Produtos</td>
+        <td>20</td>
+        <td>16</td>
+        <td>8</td>
+        <td>50%</td>
+        <td>4</td>
+      </tr>
+      <tr>
+        <td>Incentivo Previdencia</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>Câmbio</td>
+        <td>Produtos</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>Banco XP</td>
+        <td>Produtos</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>Co-corretagem</td>
+        <td>Produtos</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+    </tbody>
+    </table>

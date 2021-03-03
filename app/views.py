@@ -43,18 +43,9 @@ def consulta():
         assessores = list(db.session.query(Assessor))
     else:
         assessores = [current_user]
-    
-    queries = [
-            Investimentos,
-            Previdencia,
-            CoCorretagem,
-            IncentivoPrevidencia,
-            Cambio,
-            BancoXP
-        ]
 
     anos_meses = set()
-    for q in queries:
+    for q in app.config['TABELAS_COM_RECEITA'].values():
         query = db.session.query(q.mes_de_entrada)
         for q in query:
             q = q[0]
@@ -102,23 +93,42 @@ def consulta():
 
         return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, data=data, form=form, tabela=d[tabela])
 
-@views.route('/resumo')
+@views.route('/resumo', methods=['GET', 'POST'])
 @login_required
 def resumo():
+    if current_user.is_admin:
+        assessores = list(db.session.query(Assessor))
+    else:
+        assessores = [current_user]
+
+    anos_meses = set()
+    for q in app.config['TABELAS_COM_RECEITA'].values():
+        query = db.session.query(q.mes_de_entrada)
+        for q in query:
+            anos_meses.add(q[0].strftime('%Y/%m'))    
+
     form = ResumoForm()
-    # if request.method == 'GET':
-    #     return 'Pagina em branco com form'
 
+    for i in anos_meses:
+        form.ano_mes.choices.append(i)
+
+    for i in assessores:
+        t = (i.codigo_a, 'A' + str(i.codigo_a) + ' - ' + str(i.nome))
+        form.assessores.choices.append(t)
+
+    if request.method == 'POST':
+        assessor = load_user(request.form.get('assessores'))
+        ano = int(request.form.get('ano_mes').split('/')[0])
+        mes = int(request.form.get('ano_mes').split('/')[1])
+        ano_mes = datetime.date(ano, mes, 1)
+        
+        resumo = assessor.resumo(ano_mes)
+
+        return render_template('pages/resumo.html', resumo=resumo, form=form)
+    
     if request.method == 'GET':
-        form = ResumoForm(request.form)
-        mes_de_entrada = form.ano_mes.data
-        valores = current_user.resumo(datetime.date(2021,1,1))
-            
-        total = valores.pop('Receita Liquida')
-        #implementar valores adicionais (tx CVM, PAN, erros op., ...)
-        return render_template('pages/resumo.html', valores=valores, total=total, form=form)
+        return render_template('pages/resumo.html', form=form)
 
-    # return render_template('pages/resumo.html', data=data)
 
 
 # ------------------------

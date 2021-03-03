@@ -1,5 +1,6 @@
 from sqlalchemy import Integer, String, Float, Boolean, Date, Column
-from . import db
+from . import db, Assessor
+from typing import Dict
 
 class Previdencia(db.Model):
   __tablename__ = 'previdencia'
@@ -53,14 +54,26 @@ class Previdencia(db.Model):
   obs = Column('Observação', String(120))
   
   @classmethod
-  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> int:
+  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> Dict:
     f'''\
       Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
       Não inclui cálculos de comissão.\
     '''
-    query = db.session.query(cls.receita_liquida_total).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
-    total = sum(i[0] for i in query)
-    return total
+    receita = {}
+
+    query = db.session.query(cls.aportes_receita, cls.receita_bruta_total, cls.receita_liquida_total).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
+    
+    receita['Bruto XP'] = sum(i[0] for i in query)
+    receita['Líquido XP'] = sum(i[1] for i in query)
+    receita['Escritório'] = sum(i[2] for i in query)
+
+    return receita
+
+  @classmethod
+  def descontos(cls, codigo_a: int, mes_de_entrada: Date) -> int:
+    query = db.session.query(cls.receita_liquida_total).filter(cls.receita_liquida_total < 0)\
+                                                       .filter(cls.codigo_a == codigo_a)
+    return sum(i[0] for i in query)
 
   showable_columns = [
     (competencia, lambda x: x.strftime('%Y/%m'), ''),

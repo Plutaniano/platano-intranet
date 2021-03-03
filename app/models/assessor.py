@@ -5,6 +5,7 @@ from flask_login import UserMixin
 from sqlalchemy import Integer, String, Float, Boolean, Column
 from sqlalchemy.ext.declarative import declarative_base
 import datetime
+from typing import Dict
 
 
 class Assessor(UserMixin, db.Model):
@@ -34,38 +35,58 @@ class Assessor(UserMixin, db.Model):
         
         return meses_com_entrada
 
-    def resumo(self, mes_de_entrada: datetime.date) -> Dict[str, int]:
+    def resumo(self, mes_de_entrada: datetime.date):
         '''\
         Retorna um dicionário contendo todas as informações necessárias para apresentar
         a página resumo para o assessor.\
         '''
         t = current_app.config['TABELAS_COM_RECEITA']
-        impostos = current_app.config['IMPOSTOS']
 
-        d = {
-            'Investimentos': t['investimentos'].receita_do_escritorio(self.codigo_a, mes_de_entrada),
-            'Previdencia': t['previdencia'].receita_do_escritorio(self.codigo_a, mes_de_entrada),
-            'Banco XP': t['banco_xp'].receita_do_escritorio(self.codigo_a, mes_de_entrada),
-            'Incentivo Previdencia': t['incentivo_previdencia'].receita_do_escritorio(self.codigo_a, mes_de_entrada),
-            'Cambio': t['cambio'].receita_do_escritorio(self.codigo_a, mes_de_entrada),
-            'Co-corretagem': t['cocorretagem'].receita_do_escritorio(self.codigo_a, mes_de_entrada)
+        resumo = {
+            'Investimentos':         { 'Receita': (receita := t['investimentos'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
+                                       'Descontos': (descontos := t['investimentos'].descontos(self.codigo_a, mes_de_entrada)),
+                                       'Comissão': self.comissao_rv,
+                                       'Assessor': int((receita['Escritório'] - descontos) * self.comissao_rv)
+                                     },
+
+            'Previdencia':           { 'Receita': (receita := t['previdencia'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
+                                       'Descontos': (descontos := t['previdencia'].descontos(self.codigo_a, mes_de_entrada)),
+                                       'Comissão': self.comissao_previdencia,
+                                       'Assessor': int((receita['Escritório'] - descontos) * self.comissao_previdencia)
+                                     },
+
+            'Banco XP':              { 'Receita': (receita := t['banco_xp'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
+                                       'Comissão': self.comissao_bancoxp,
+                                       'Assessor': int(receita['Escritório'] * self.comissao_bancoxp)
+                                     },
+
+            'Incentivo Previdencia': { 'Receita': (receita := t['incentivo_previdencia'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
+                                       'Comissão': self.comissao_previdencia,
+                                       'Assessor': int(receita['Escritório'] * self.comissao_previdencia)
+                                     },
+
+            'Cambio':                { 'Receita': (receita := t['cambio'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
+                                       'Comissão': self.comissao_cambio,
+                                       'Assessor': int(receita['Escritório'] * self.comissao_cambio)
+                                     },
+
+            'Co-corretagem':         { 'Receita': (receita := t['cocorretagem'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
+                                       'Comissão': 1,
+                                       'Assessor': int(receita['Escritório'] * 1)
+                                     },
         }
 
-        d['Receita Bruta'] = sum(d.values())
+        resumo['Total Bruto'] = resumo['Investimentos']['Assessor']\
+                          + resumo['Previdencia']['Assessor']\
+                          + resumo['Banco XP']['Assessor']\
+                          + resumo['Incentivo Previdencia']['Assessor']\
+                          + resumo['Cambio']['Assessor']\
+                          + resumo['Co-corretagem']['Assessor']
 
-        liquida = d['Receita Bruta']
+        resumo['Impostos'] = resumo['Total Bruto'] * 0.2
+        resumo['Total Líquido'] = resumo['Total Bruto'] - resumo['Impostos']
 
-        for nome, taxa in impostos.items():
-            d[nome] = d['Receita Bruta'] * taxa * -1
-            liquida  += d[nome]
-        
-        d['Receita Liquida'] = liquida
-
-        for key, value in d.items():
-            value = float(value * 0.01)
-            d[key] =  value
-
-        return d
+        return resumo
 
     showable_columns = [
     (codigo_a, lambda x: 'A' + str(x), ''),
