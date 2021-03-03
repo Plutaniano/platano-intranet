@@ -49,7 +49,9 @@ class Investimentos(db.Model):
     '''
     receita = {}
 
-    query = db.session.query(cls.receita_bruta, cls.receita_liquida, cls.comissao_escritorio).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
+    query = db.session.query(cls.receita_bruta, cls.receita_liquida, cls.comissao_escritorio)\
+                      .filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)\
+                      .filter(cls.comissao_escritorio >= 0)
 
     receita['Bruto XP'] = sum(i[0] for i in query)
     receita['Líquido XP'] = sum(i[1] for i in query)

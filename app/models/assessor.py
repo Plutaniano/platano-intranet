@@ -60,11 +60,6 @@ class Assessor(UserMixin, db.Model):
                                        'Assessor': int(receita['Escritório'] * self.comissao_bancoxp)
                                      },
 
-            'Incentivo Previdencia': { 'Receita': (receita := t['incentivo_previdencia'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
-                                       'Comissão': self.comissao_previdencia,
-                                       'Assessor': int(receita['Escritório'] * self.comissao_previdencia)
-                                     },
-
             'Cambio':                { 'Receita': (receita := t['cambio'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
                                        'Comissão': self.comissao_cambio,
                                        'Assessor': int(receita['Escritório'] * self.comissao_cambio)
@@ -79,7 +74,6 @@ class Assessor(UserMixin, db.Model):
         resumo['Total Bruto'] = resumo['Investimentos']['Assessor']\
                           + resumo['Previdencia']['Assessor']\
                           + resumo['Banco XP']['Assessor']\
-                          + resumo['Incentivo Previdencia']['Assessor']\
                           + resumo['Cambio']['Assessor']\
                           + resumo['Co-corretagem']['Assessor']
 

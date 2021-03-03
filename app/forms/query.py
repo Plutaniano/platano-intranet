@@ -21,6 +21,5 @@ class QueryForm(FlaskForm):
                              ('previdencia', 'Previdência'),
                              ('co_corretagem', 'Co-Corretagem'),
                              ('bancoXP', 'Banco XP'),
-                             ('incentivo_previdencia', 'Incentivo Previdência'),
                              ('cambio', 'Câmbio')
                              ])

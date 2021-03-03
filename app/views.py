@@ -69,14 +69,7 @@ def consulta():
         ano_mes = datetime.date(ano, mes, 1)
         tabela = request.form.get('tabela')
 
-        d = {
-            'investimentos': Investimentos,
-            'previdencia': Previdencia,
-            'co_corretagem': CoCorretagem,
-            'incentivo_previdencia': IncentivoPrevidencia,
-            'bancoXP': BancoXP,
-            'cambio': Cambio
-        }
+        d = app.config['TABELAS_COM_RECEITA']
 
         data = db.session\
                     .query(*(i[0] for i in d[tabela].showable_columns))\
