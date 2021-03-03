@@ -44,15 +44,13 @@ class Assessor(UserMixin, db.Model):
 
         resumo = {
             'Investimentos':         { 'Receita': (receita := t['investimentos'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
-                                       'Descontos': (descontos := t['investimentos'].descontos(self.codigo_a, mes_de_entrada)),
                                        'Comissão': self.comissao_rv,
-                                       'Assessor': int((receita['Escritório'] - descontos) * self.comissao_rv)
+                                       'Assessor': int(receita['Escritório'] * self.comissao_rv)
                                      },
 
             'Previdencia':           { 'Receita': (receita := t['previdencia'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
-                                       'Descontos': (descontos := t['previdencia'].descontos(self.codigo_a, mes_de_entrada)),
                                        'Comissão': self.comissao_previdencia,
-                                       'Assessor': int((receita['Escritório'] - descontos) * self.comissao_previdencia)
+                                       'Assessor': int(receita['Escritório'] * self.comissao_previdencia)
                                      },
 
             'Banco XP':              { 'Receita': (receita := t['banco_xp'].receita_do_escritorio(self.codigo_a, mes_de_entrada)),
@@ -78,7 +76,22 @@ class Assessor(UserMixin, db.Model):
                           + resumo['Co-corretagem']['Assessor']
 
         resumo['Impostos'] = resumo['Total Bruto'] * 0.2
-        resumo['Total Líquido'] = resumo['Total Bruto'] - resumo['Impostos']
+
+        resumo['Descontos Prêvidencia'] = t['previdencia'].descontos(self.codigo_a, mes_de_entrada)
+        resumo['Descontos Investimentos'] = t['investimentos'].descontos(self.codigo_a, mes_de_entrada)
+
+        resumo['Total Bruto'] = resumo['Investimentos']['Assessor']\
+                          + resumo['Previdencia']['Assessor']\
+                          + resumo['Banco XP']['Assessor']\
+                          + resumo['Cambio']['Assessor']\
+                          + resumo['Co-corretagem']['Assessor']
+
+        resumo['Impostos'] = resumo['Total Bruto'] * 0.2
+
+        resumo['Total Líquido'] = resumo['Total Bruto']\
+                                - resumo['Impostos']\
+                                + resumo['Descontos Prêvidencia']\
+                                + resumo['Descontos Investimentos']
 
         return resumo
 

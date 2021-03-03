@@ -15,6 +15,22 @@ from .parser import parse_excel
 
 views = Blueprint('views', __name__)
 
+@app.template_filter()
+def currency(value):
+    if value == 0:
+        return '-'
+
+    value *= 0.01
+    t = "{0:,.2f}".format(value)
+    t = t.replace(',', '*')
+    t = t.replace('.', ',')
+    return t.replace('*', '.')
+
+@app.template_filter()
+def percent(value):
+    value *= 100
+    return "{0:,.2f} %".format(value)
+
 @login_manager.user_loader
 def load_user(id):
     user = db.session.query(Assessor).filter_by(codigo_a=id).first()

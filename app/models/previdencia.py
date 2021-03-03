@@ -72,6 +72,7 @@ class Previdencia(db.Model):
   @classmethod
   def descontos(cls, codigo_a: int, mes_de_entrada: Date) -> int:
     query = db.session.query(cls.receita_liquida_total).filter(cls.receita_liquida_total < 0)\
+                                                       .filter(cls.mes_de_entrada == mes_de_entrada)\
                                                        .filter(cls.codigo_a == codigo_a)
     return sum(i[0] for i in query)
 
