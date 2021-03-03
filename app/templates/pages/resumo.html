@@ -22,84 +22,75 @@
 <table class='table table-hover table-striped table-bordered table-sm'>
   <thead>
     <tr>
-      <th>Segmento</th>
-      <th>Descrição</th>
-      <th>Bruto XP</th>
-      <th>Líquido XP</th>
-      <th>Escritório</th>
-      <th>Comissão</th>
-      <th>Total (R$)</th>
+      <th class="text-center">Segmento</th>
+      <th class="text-center">Descrição</th>
+      <th class="text-center">Bruto XP</th>
+      <th class="text-center">Líquido XP</th>
+      <th class="text-center">Escritório</th>
+      <th class="text-center">Comissão</th>
+      <th class="text-center">Total (R$)</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td rowspan="2">Investimentos</td>
+      <td>Investimentos</td>
       <td>Receita</td>
-      <td>{{ resumo['Investimentos']['Receita']['Bruto XP'] }}</td>
-      <td>{{ resumo['Investimentos']['Receita']['Líquido XP'] }}</td>
-      <td>{{ resumo['Investimentos']['Receita']['Escritório'] }}</td>
-      <td>{{ "{0:,.2f}".format(resumo['Investimentos']['Comissão'] * 100) }} %</td>
-      <td>{{ "{0:,.2f}".format(resumo['Investimentos']['Assessor'] * 0.01) }}</td>
+      <td class="text-right">{{ resumo['Investimentos']['Receita']['Bruto XP'] }}</td>
+      <td class="text-right">{{ resumo['Investimentos']['Receita']['Líquido XP'] }}</td>
+      <td class="text-right">{{ resumo['Investimentos']['Receita']['Escritório'] }}</td>
+      <td class="text-right">{{ "{0:,.2f}".format(resumo['Investimentos']['Comissão'] * 100) }} %</td>
+      <td class="text-right">{{ "{0:,.2f}".format(resumo['Investimentos']['Assessor'] * 0.01) }}</td>
     </tr>
     <tr>
-      <td colspan="4">Descontos</td>
-      <td>100 %</td>
-      <td>{{ "{0:,.2f}".format(0.01 * resumo['Investimentos']['Descontos']) }}</td>
-    </tr>
-    <tr>
-      <td rowspan="2">Previdencia</td>
+      <td>Previdencia</td>
       <td>Receita</td>
-      <td>{{ resumo['Previdencia']['Receita']['Bruto XP'] }}</td>
-      <td>{{ resumo['Previdencia']['Receita']['Líquido XP'] }}</td>
-      <td>{{ resumo['Previdencia']['Receita']['Escritório'] }}</td>
-      <td>{{ "%.2f" | format(resumo['Previdencia']['Comissão'] * 100) }} %</td>
-      <td>{{ "{0:,.2f}".format(resumo['Previdencia']['Assessor'] * 0.01) }}</td>
+      <td class="text-right">{{ resumo['Previdencia']['Receita']['Bruto XP'] }}</td>
+      <td class="text-right">{{ resumo['Previdencia']['Receita']['Líquido XP'] }}</td>
+      <td class="text-right">{{ resumo['Previdencia']['Receita']['Escritório'] }}</td>
+      <td class="text-right">{{ "%.2f" | format(resumo['Previdencia']['Comissão'] * 100) }} %</td>
+      <td class="text-right">{{ "{0:,.2f}".format(resumo['Previdencia']['Assessor'] * 0.01) }}</td>
     </tr>
-    <tr>
-      <td colspan="4">Incentivo Prêvidencia</td>
-      <td>100 %</td>
-      <td>{{ "{0:,.2f}".format(0.01 * resumo['Previdencia']['Descontos']) }}</td>
     <tr>
       <td>Câmbio</td>
       <td>Receita</td>
-      <td>-</td>
-      <td>-</td>
-      <td>{{ resumo['Cambio']['Receita']['Escritório'] }}</td>
-      <td>{{ "{0:,.2f}".format(resumo['Cambio']['Comissão'] * 100) }} %</td>
-      <td>{{ "{0:,.2f}".format(resumo['Cambio']['Assessor'] * 0.01) }}</td>
+      <td class="text-center">-</td>
+      <td class="text-center">-</td>
+      <td class="text-right">{{ resumo['Cambio']['Receita']['Escritório'] }}</td>
+      <td class="text-right">{{ "{0:,.2f}".format(resumo['Cambio']['Comissão'] * 100) }} %</td>
+      <td class="text-right">{{ "{0:,.2f}".format(resumo['Cambio']['Assessor'] * 0.01) }}</td>
     </tr>
     <tr>
       <td>Banco XP</td>
       <td>Receita</td>
-      <td>{{ resumo['Banco XP']['Receita']['Bruto XP'] }}</td>
-      <td>{{ resumo['Banco XP']['Receita']['Líquido XP'] }}</td>
-      <td>{{ resumo['Banco XP']['Receita']['Escritório'] }}</td>
-      <td>{{ "{0:.2%}".format(resumo['Banco XP']['Comissão']) }}</td>
-      <td>{{ "{0:,.2f}".format(resumo['Banco XP']['Assessor'] * 0.01) }}</td>
+      <td class="text-right">{{ resumo['Banco XP']['Receita']['Bruto XP'] }}</td>
+      <td class="text-right">{{ resumo['Banco XP']['Receita']['Líquido XP'] }}</td>
+      <td class="text-right">{{ resumo['Banco XP']['Receita']['Escritório'] }}</td>
+      <td class="text-right">{{ "{0:.2%}".format(resumo['Banco XP']['Comissão']) }}</td>
+      <td class="text-right">{{ "{0:,.2f}".format(resumo['Banco XP']['Assessor'] * 0.01) }}</td>
     </tr>
     <tr>
       <td>Co-corretagem</td>
       <td>Receita</td>
-      <td>{{ resumo['Co-corretagem']['Receita']['Bruto XP'] }}</td>
-      <td>{{ resumo['Co-corretagem']['Receita']['Líquido XP'] }}</td>
-      <td>{{ resumo['Co-corretagem']['Receita']['Escritório'] }}</td>  
-      <td>{{ "{0:.2%}".format(resumo['Co-corretagem']['Comissão']) }}</td>
-      <td>{{ "{0:,.2f}".format(resumo['Co-corretagem']['Assessor'] * 0.01) }}</td>
+      <td class="text-right">{{ resumo['Co-corretagem']['Receita']['Bruto XP'] }}</td>
+      <td class="text-right">{{ resumo['Co-corretagem']['Receita']['Líquido XP'] }}</td>
+      <td class="text-right">{{ resumo['Co-corretagem']['Receita']['Escritório'] }}</td>  
+      <td class="text-right">{{ "{0:.2%}".format(resumo['Co-corretagem']['Comissão']) }}</td>
+      <td class="text-right">{{ "{0:,.2f}".format(resumo['Co-corretagem']['Assessor'] * 0.01) }}</td>
     </tr>
     <tr>
       <td colspan="5"></td>
       <td><b>Total Bruto</b></td>
-      <td><b>{{ "{0:,.2f}".format(resumo['Total Bruto'] * 0.01) }}</b></td>
+      <td class="text-right"><b>{{ "{0:,.2f}".format(resumo['Total Bruto'] * 0.01) }}</b></td>
     </tr>
     <tr>
       <td colspan="5"></td>
-      <td><b>Impostos (20%)</b></td>
-      <td><b>{{ "{0:,.2f}".format(resumo['Impostos'] * -0.01) }}</b></td>
+      <td ><b>Impostos (20%)</b></td>
+      <td class="text-right"><b>{{ "{0:,.2f}".format(resumo['Impostos'] * -0.01) }}</b></td>
     </tr>
     <tr>
       <td colspan="5"></td>
       <td><b>Total Líquido</b></td>
-      <td><b>{{ "{0:,.2f}".format(resumo['Total Líquido'] * 0.01) }}</b></td>
+      <td class="text-right"><b>{{ "{0:,.2f}".format(resumo['Total Líquido'] * 0.01) }}</b></td>
     </tr>
   </tbody>
 </table>
