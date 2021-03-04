@@ -145,7 +145,7 @@ def resumo():
             for produto in descontos[segmento]:
                 total += produto[1]
         
-        total_descontos = total_receitas - total
+        total_descontos = total - total_receitas
 
         return render_template('pages/resumo.html', receita=receita, descontos=descontos, total_receitas=total_receitas, total_descontos=total_descontos, total=total, form=form)
     
