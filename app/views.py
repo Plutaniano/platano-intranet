@@ -17,7 +17,7 @@ views = Blueprint('views', __name__)
 
 @app.template_filter()
 def currency(value):
-    if value == 0:
+    if value in [0, None]:
         return '-'
 
     value *= 0.01

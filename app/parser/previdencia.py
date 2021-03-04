@@ -11,6 +11,10 @@ def parse_previdencia(ws: Worksheet, mes_de_entrada: date) -> None:
             continue
         
         else:
+            if str(row[9].value).startswith('[Devolução '):
+                row[28].value = str(row[9].value)
+                row[9].value = 'Incentivo Previdência - Adiantamento ROA'
+                
             entry = Previdencia(mes_de_entrada=mes_de_entrada,
                                 tipo=row[0].value,
                                 competencia=row[1].value.date(),

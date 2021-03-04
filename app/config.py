@@ -24,3 +24,4 @@ DEFAULT_COMISSOES = {
     'banco_xp': 0.45,
     'cambio': 0.25
 }
+

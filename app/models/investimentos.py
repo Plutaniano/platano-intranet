@@ -1,5 +1,5 @@
-from sqlalchemy import Integer, String, Float, Boolean, Date, Column
-from . import db, Assessor
+from sqlalchemy import Integer, String, Float, Boolean, Date, Column, ForeignKey, func
+from . import db
 from flask import current_app
 from typing import Dict
 
@@ -42,26 +42,29 @@ class Investimentos(db.Model):
   assessor_indireto3_comissao = Column('Assessor Indireto 3 Comissão', Integer)
 
   @classmethod
-  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> Dict:
-    f'''\
-      Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
-      Não inclui cálculos de comissão.\
-    '''
-    receita = {}
+  def receitas(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                              cls.produto.label('Produto'),\
+                              func.sum(cls.receita_bruta.label('Bruto XP')),\
+                              func.sum(cls.receita_liquida.label('Líquido XP')),\
+                              func.sum(cls.comissao_escritorio.label('Escritório'))\
+    ).group_by(
+                              cls.produto
+    ).filter(
+                              cls.produto.in_(cls.RV),
+                              cls.codigo_a == assessor.codigo_a,
+                              cls.mes_de_entrada == mes_de_entrada
+    )
 
-    query = db.session.query(cls.receita_bruta, cls.receita_liquida, cls.comissao_escritorio)\
-                      .filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)\
-                      .filter(cls.comissao_escritorio >= 0)
+    query = list(query)
+    if len(query) == 0:
+      return [('-', 0, 0, 0)]
 
-    receita['Bruto XP'] = sum(i[0] for i in query)
-    receita['Líquido XP'] = sum(i[1] for i in query)
-    receita['Escritório'] = sum(i[2] for i in query)
-
-    return receita
+    return query
   
   @classmethod
-  def descontos(cls, codigo_a: int, mes_de_entrada: Date) -> int:
-    query = db.session.query(cls.comissao_escritorio)\
+  def descontos(cls, codigo_a, mes_de_entrada) -> int:
+    query = db.session.query(func.sum(cls.comissao_escritorio), func.sum())\
                         .filter(cls.codigo_a == codigo_a)\
                         .filter(cls.comissao_escritorio < 0)\
                         .filter(cls.mes_de_entrada == mes_de_entrada)
@@ -80,3 +83,30 @@ class Investimentos(db.Model):
     (comissao_escritorio_porcento,lambda x: '%.2f' % (100 * x), '(%)'),
     (comissao_escritorio,         lambda x: '%.2f' % (0.01 * x), '(R$)')
   ]
+
+  RV = [
+    'BMF MINI',
+    'BM&F',
+    'BMF SELF SERVICE',
+    'BOVESPA SELF SERVICE',
+    'BOVESPA',
+    'CLUBES',
+    'BTC',
+    'IPO',
+    'OFERTA RV',
+    'OFERTA FII',
+    'COMPLEMENTO DE CORRETAGEM',
+    'INDICAÇÃO DE CLIENTES',
+    'Transferencia de Clientes',
+    'Campanha Fundos Imobiliários'
+]
+
+ALOCACAO = [
+    'COE',
+    'FUNDOS - TX ADM',
+    'IPO FEE RENDA FIXA',
+    'RENDA FIXA',
+    'FUNDOS - TX PERF',
+    'Campanha Fundos',
+    'Campanha Renda Fixa',
+]

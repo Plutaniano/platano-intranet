@@ -1,5 +1,5 @@
-from sqlalchemy import Integer, String, Float, Boolean, Date, Column
-from . import db, Assessor
+from sqlalchemy import Integer, String, Float, Boolean, Date, Column, func, ForeignKey
+from . import db
 from typing import Dict
 
 
@@ -46,20 +46,24 @@ class CoCorretagem(db.Model):
   obs = Column('Observações', String(100))
   
   @classmethod
-  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> Dict:
-    f'''\
-      Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
-      Não inclui cálculos de comissão.\
-    '''
-    receita = {}
+  def receitas(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                            cls.produto,
+                            func.sum(cls.aportes_base),
+                            func.sum(cls.aportes_receita),
+                            func.sum(cls.receita_total)
+    ).group_by(
+                            cls.produto
+    ).filter(
+                            cls.codigo_a == assessor.codigo_a,
+                            cls.mes_de_entrada == mes_de_entrada,
+        )
 
-    query = db.session.query(cls.aportes_base, cls.aportes_receita, cls.receita_total).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
-    
-    receita['Bruto XP'] = sum(i[0] for i in query)
-    receita['Líquido XP'] = sum(i[1] for i in query)
-    receita['Escritório'] = sum(i[2] for i in query)
+    query = list(query)
+    if len(query) == 0:
+      return [('-', 0, 0, 0)]
 
-    return receita
+    return query
 
   showable_columns = [
     (tipo, lambda x: x, ''),

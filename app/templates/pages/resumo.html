@@ -32,78 +32,19 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>Investimentos</td>
-      <td>Receita</td>
-      <td class="text-right">{{ resumo['Investimentos']['Receita']['Bruto XP'] | currency }}</td>
-      <td class="text-right">{{ resumo['Investimentos']['Receita']['Líquido XP'] | currency}}</td>
-      <td class="text-right">{{ resumo['Investimentos']['Receita']['Escritório'] | currency}}</td>
-      <td class="text-right">{{ resumo['Investimentos']['Comissão'] | percent }}</td>
-      <td class="text-right">{{ resumo['Investimentos']['Assessor'] | currency }}</td>
-    </tr>
-    <tr>
-      <td>Previdencia</td>
-      <td>Receita</td>
-      <td class="text-right">{{ resumo['Previdencia']['Receita']['Bruto XP'] | currency }}</td>
-      <td class="text-right">{{ resumo['Previdencia']['Receita']['Líquido XP'] | currency }}</td>
-      <td class="text-right">{{ resumo['Previdencia']['Receita']['Escritório'] | currency }}</td>
-      <td class="text-right">{{ resumo['Previdencia']['Comissão'] | percent }}</td>
-      <td class="text-right">{{ resumo['Previdencia']['Assessor'] | currency }}</td>
-    </tr>
-    <tr>
-      <td>Câmbio</td>
-      <td>Receita</td>
-      <td class="text-right">-</td>
-      <td class="text-right">-</td>
-      <td class="text-right">{{ resumo['Cambio']['Receita']['Escritório'] | currency }}</td>
-      <td class="text-right">{{ resumo['Cambio']['Comissão'] | percent }}</td>
-      <td class="text-right">{{ resumo['Cambio']['Assessor'] | currency }}</td>
-    </tr>
-    <tr>
-      <td>Banco XP</td>
-      <td>Receita</td>
-      <td class="text-right">{{ resumo['Banco XP']['Receita']['Bruto XP'] | currency}}</td>
-      <td class="text-right">{{ resumo['Banco XP']['Receita']['Líquido XP'] | currency}}</td>
-      <td class="text-right">{{ resumo['Banco XP']['Receita']['Escritório'] | currency}}</td>
-      <td class="text-right">{{ resumo['Banco XP']['Comissão'] | percent }}</td>
-      <td class="text-right">{{ resumo['Banco XP']['Assessor'] | currency }}</td>
-    </tr>
-    <tr>
-      <td>Co-corretagem</td>
-      <td>Receita</td>
-      <td class="text-right">{{ resumo['Co-corretagem']['Receita']['Bruto XP'] | currency }}</td>
-      <td class="text-right">{{ resumo['Co-corretagem']['Receita']['Líquido XP'] | currency }}</td>
-      <td class="text-right">{{ resumo['Co-corretagem']['Receita']['Escritório'] | currency }}</td>  
-      <td class="text-right">{{ resumo['Co-corretagem']['Comissão'] | percent }}</td>
-      <td class="text-right">{{ resumo['Co-corretagem']['Assessor'] | currency }}</td>
-    </tr>
-    <tr>
-      <td colspan="5"></td>
-      <td><b>Total Bruto</b></td>
-      <td class="text-right"><b>{{ resumo['Total Bruto'] | currency }}</b></td>
-    </tr>
-    <tr>
-      <td colspan="5"></td>
-      <td ><b>Impostos (20%)</b></td>
-      <td class="text-right"><b>{{ resumo['Impostos'] | currency }}</b></td>
-    </tr>
-    <tr>
-      <td>Descontos Investimentos</td>
-      <td>Desconto</td>
-      <td class="text-right" colspan="4"></td>
-      <td class="text-right">{{ resumo['Descontos Investimentos'] | currency }}</td>
-    </tr>
-    <tr>
-      <td>Descontos Prêvidencia</td>
-      <td>Desconto</td>
-      <td class="text-right" colspan="4"></td>
-      <td class="text-right">{{ resumo['Descontos Prêvidencia'] | currency }}</td>
-    </tr>
-    <tr>
-      <td colspan="5"></td>
-      <td><b>Total Líquido</b></td>
-      <td class="text-right"><b>{{ resumo['Total Líquido'] | currency}}</b></td>
-    </tr>
+    {% for segmento in resumo %}
+      {% for produto in resumo[segmento] %}
+      <tr>
+        {% if loop.index == 1%}<td class='text-center' style="vertical-align: middle;" rowspan="{{ resumo[segmento] | length }}">{{ segmento }}</td>{% endif %}
+        <td>{{ produto[0] }}</td>
+        <td class="text-right">{{ produto[1] | currency}}</td>
+        <td class="text-right">{{ produto[2] | currency}}</td>
+        <td class="text-right">{{ produto[3] | currency}}</td>
+        {% if loop.index == 1%}<td class="text-center" style="vertical-align: middle;" rowspan="{{ resumo[segmento] | length }}">{{ produto[4] | percent }}</td>{% endif %}
+        <td class="text-right">{{ produto[5] | currency }}</td>
+      </tr>
+      {% endfor %}
+    {% endfor %}
   </tbody>
 </table>
 {% endif %}

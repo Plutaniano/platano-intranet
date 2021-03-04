@@ -1,5 +1,5 @@
-from sqlalchemy import Integer, String, Float, Boolean, Date, Column
-from . import db, Assessor
+from sqlalchemy import Integer, String, Float, Boolean, Date, Column, func, ForeignKey
+from . import db
 from typing import Dict
 
 class Cambio(db.Model):
@@ -21,20 +21,23 @@ class Cambio(db.Model):
   codigo_a = Column('Código A', Integer)
 
   @classmethod
-  def receita_do_escritorio(cls, codigo_a: int, mes_de_entrada: Date) -> Dict:
-    f'''\
-      Retorna a receita gerada no seguimento `{cls.__displayname__}` para o escritório pelo `assessor` durante o `mes_de_entrada`.
-      Não inclui cálculos de comissão.\
-    '''
-    receita = {}
+  def receitas(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                              cls.moeda.label('Moeda'),\
+                              func.sum(cls.receita.label('Escritório'))\
+    ).group_by(
+               cls.moeda
+    ).filter(
+               cls.codigo_a == assessor.codigo_a,
+               cls.mes_de_entrada == mes_de_entrada
+    )
 
-    query = db.session.query(cls.receita).filter_by(codigo_a = codigo_a, mes_de_entrada=mes_de_entrada)
-    
-    receita['Bruto XP'] = 0
-    receita['Líquido XP'] = 0
-    receita['Escritório'] = sum(i[0] for i in query)
+    query = list(query)
 
-    return receita
+    if len(query) == 0:
+      return [('-', 0, 0)]
+
+    return query
 
   showable_columns = [
     (codigo_cliente, lambda x: x, ''),
