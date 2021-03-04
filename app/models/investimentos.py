@@ -61,14 +61,47 @@ class Investimentos(db.Model):
       return [('-', 0, 0, 0)]
 
     return query
+
+  @classmethod
+  def receitas_alocacao(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                              cls.produto.label('Produto'),\
+                              func.sum(cls.receita_bruta.label('Bruto XP')),\
+                              func.sum(cls.receita_liquida.label('Líquido XP')),\
+                              func.sum(cls.comissao_escritorio.label('Escritório'))\
+    ).group_by(
+                              cls.produto
+    ).filter(
+                              cls.produto.in_(cls.ALOCACAO),
+                              cls.codigo_a == assessor.codigo_a,
+                              cls.mes_de_entrada == mes_de_entrada
+    )
+
+    query = list(query)
+    if len(query) == 0:
+      return [('-', 0, 0, 0)]
+
+    return query
+
   
   @classmethod
-  def descontos(cls, codigo_a, mes_de_entrada) -> int:
-    query = db.session.query(func.sum(cls.comissao_escritorio), func.sum())\
-                        .filter(cls.codigo_a == codigo_a)\
-                        .filter(cls.comissao_escritorio < 0)\
-                        .filter(cls.mes_de_entrada == mes_de_entrada)
-    return sum(i[0] for i in query)
+  def descontos(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                              cls.produto.label('Produto'),\
+                              func.sum(cls.comissao_escritorio.label('Escritório'))\
+    ).group_by(
+                              cls.produto
+    ).filter(
+                              cls.produto.in_(cls.DESCONTOS),
+                              cls.codigo_a == assessor.codigo_a,
+                              cls.mes_de_entrada == mes_de_entrada
+    )
+
+    query = list(query)
+    if len(query) == 0:
+      return [('-', 0)]
+
+    return query
 
   showable_columns = [
     # (coluna, função para display, unidade)
@@ -99,9 +132,9 @@ class Investimentos(db.Model):
     'INDICAÇÃO DE CLIENTES',
     'Transferencia de Clientes',
     'Campanha Fundos Imobiliários'
-]
+  ]
 
-ALOCACAO = [
+  ALOCACAO = [
     'COE',
     'FUNDOS - TX ADM',
     'IPO FEE RENDA FIXA',
@@ -109,4 +142,10 @@ ALOCACAO = [
     'FUNDOS - TX PERF',
     'Campanha Fundos',
     'Campanha Renda Fixa',
-]
+  ]
+
+  DESCONTOS = [
+    'Enquadramento RLP',  
+    'Clubes (debito)',
+    'Erro Operacional'
+  ]

@@ -131,9 +131,23 @@ def resumo():
         mes = int(request.form.get('ano_mes').split('/')[1])
         ano_mes = datetime.date(ano, mes, 1)
         
-        resumo = assessor.resumo(ano_mes)
+        receita = assessor.resumo(ano_mes)
+        descontos = assessor.descontos(ano_mes)
 
-        return render_template('pages/resumo.html', resumo=resumo, form=form)
+        total = 0
+        for segmento in receita:
+            for produto in receita[segmento]:
+                total += produto[5]
+
+        total_receitas = total
+
+        for segmento in descontos:
+            for produto in descontos[segmento]:
+                total += produto[1]
+        
+        total_descontos = total_receitas - total
+
+        return render_template('pages/resumo.html', receita=receita, descontos=descontos, total_receitas=total_receitas, total_descontos=total_descontos, total=total, form=form)
     
     if request.method == 'GET':
         return render_template('pages/resumo.html', form=form)

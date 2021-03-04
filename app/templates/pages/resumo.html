@@ -18,7 +18,7 @@
 </form>
 <br>
 
-{% if resumo %}
+{% if receita %}
 <table class='table table-hover table-striped table-bordered table-sm'>
   <thead>
     <tr>
@@ -32,19 +32,53 @@
     </tr>
   </thead>
   <tbody>
-    {% for segmento in resumo %}
-      {% for produto in resumo[segmento] %}
+    {% for segmento in receita %}
+      {% for produto in receita[segmento] %}
       <tr>
-        {% if loop.index == 1%}<td class='text-center' style="vertical-align: middle;" rowspan="{{ resumo[segmento] | length }}">{{ segmento }}</td>{% endif %}
+        {% if loop.index == 1%}<td class='text-center' style="vertical-align: middle;" rowspan="{{ receita[segmento] | length }}">{{ segmento }}</td>{% endif %}
         <td>{{ produto[0] }}</td>
         <td class="text-right">{{ produto[1] | currency}}</td>
         <td class="text-right">{{ produto[2] | currency}}</td>
         <td class="text-right">{{ produto[3] | currency}}</td>
-        {% if loop.index == 1%}<td class="text-center" style="vertical-align: middle;" rowspan="{{ resumo[segmento] | length }}">{{ produto[4] | percent }}</td>{% endif %}
+        {% if loop.index == 1%}<td class="text-center" style="vertical-align: middle;" rowspan="{{ receita[segmento] | length }}">{{ produto[4] | percent }}</td>{% endif %}
         <td class="text-right">{{ produto[5] | currency }}</td>
       </tr>
       {% endfor %}
     {% endfor %}
+    <tr>
+      <td colspan="5"></td>
+      <td class="text-center"><b>Total Receitas</b></td>
+      <td class="text-right"><b>{{ total_receitas | currency }}</b></td>
+    </tr>
+    <tr>
+      <th class="text-center">Desconto</th>
+      <th class="text-center">Descrição</th>
+      <th class="text-center">Bruto XP</th>
+      <th class="text-center">Líquido XP</th>
+      <th class="text-center">Escritório</th>
+      <th class="text-center">Comissão</th>
+      <th class="text-center">Total (R$)</th>
+    </tr>
+    {% for segmento in descontos %}
+      {% for produto in descontos[segmento] %}
+      <tr>
+        {% if loop.index == 1%}<td class='text-center' style="vertical-align: middle;" rowspan="{{ descontos[segmento] | length }}">{{ segmento }}</td>{% endif %}
+        <td>{{ produto[0] }}</td>
+        <td colspan="4"></td>
+        <td class="text-right">{{ produto[1] | currency }}</td>
+      </tr>
+      {% endfor %}
+    {% endfor %}
+    <tr>
+      <td colspan="5"></td>
+      <td class="text-center"><b>Total Descontos</b></td>
+      <td class="text-right"><b>{{ total_descontos | currency }}</b></td>
+    </tr>
+    <tr>
+      <td colspan="5"></td>
+      <td class="text-center"><b>Total</b></td>
+      <td class="text-right"><b>{{ total | currency }}</b></td>
+    </tr>
   </tbody>
 </table>
 {% endif %}

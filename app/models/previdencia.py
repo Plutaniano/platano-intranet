@@ -63,6 +63,7 @@ class Previdencia(db.Model):
     ).group_by(
                             cls.produto
     ).filter(
+                            cls.produto.notin_(cls.DESCONTOS),
                             cls.codigo_a == assessor.codigo_a,
                             cls.mes_de_entrada == mes_de_entrada,
         )
@@ -74,11 +75,23 @@ class Previdencia(db.Model):
     return query
 
   @classmethod
-  def descontos(cls, codigo_a: int, mes_de_entrada: Date) -> int:
-    query = db.session.query(cls.receita_liquida_total).filter(cls.receita_liquida_total < 0)\
-                                                       .filter(cls.mes_de_entrada == mes_de_entrada)\
-                                                       .filter(cls.codigo_a == codigo_a)
-    return sum(i[0] for i in query)
+  def descontos(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                            cls.produto,
+                            func.sum(cls.receita_liquida_total)
+    ).group_by(
+                            cls.produto
+    ).filter(
+                            cls.produto.in_(cls.DESCONTOS),
+                            cls.codigo_a == assessor.codigo_a,
+                            cls.mes_de_entrada == mes_de_entrada,
+        )
+
+    query = list(query)
+    if len(query) == 0:
+      return [('-', 0, 0, 0)]
+
+    return query
 
   showable_columns = [
     (competencia, lambda x: x.strftime('%Y/%m'), ''),
@@ -91,4 +104,8 @@ class Previdencia(db.Model):
     (ir_sobre_receita_bruta, lambda x: round(x, 2), '(R$)'),
     (receita_liquida_total, lambda x: round(0.01 * x, 2), '(R$)'),
     (obs, lambda x: x, ''),
+  ]
+
+  DESCONTOS = [
+    'Incentivo Previdência - Adiantamento ROA'
   ]

@@ -40,6 +40,8 @@ class Assessor(UserMixin, db.Model):
         resumo = {
             'Investimentos': list(((*i, self.comissao_rv, i[3] * self.comissao_rv) for i in t['investimentos'].receitas(self, mes_de_entrada))),
 
+            'Alocação': list(((*i, self.comissao_alocacao, i[3] * self.comissao_alocacao) for i in t['investimentos'].receitas_alocacao(self, mes_de_entrada))),
+
             'Prêvidencia': list(((*i, self.comissao_previdencia, i[3] * self.comissao_previdencia) for i in t['previdencia'].receitas(self, mes_de_entrada))),
 
             'Banco XP': list(((i[0], 0, i[1], i[2], self.comissao_bancoxp, i[2] * self.comissao_bancoxp) for i in t['banco_xp'].receitas(self, mes_de_entrada))),
@@ -49,7 +51,25 @@ class Assessor(UserMixin, db.Model):
             'Co-corretagem': list(((*i, 1, i[3] * 1) for i in t['cocorretagem'].receitas(self, mes_de_entrada)))
         }
 
+        descontos = {
+            'Descontos Prêvidencia': list((*i,) for i in t['previdencia'].descontos(self, mes_de_entrada))
+        }
+
         return resumo
+
+    def descontos(self, mes_de_entrada: datetime.date):
+        t = current_app.config['TABELAS_COM_RECEITA']
+        
+        descontos = {
+            'Descontos Previdencia': list((*i,) for i in t['previdencia'].descontos(self, mes_de_entrada)),
+
+            'Descontos Investimentos': list((*i,) for i in t['investimentos'].descontos(self, mes_de_entrada))
+
+        }
+
+        return descontos
+
+        
 
     showable_columns = [
     (codigo_a, lambda x: 'A' + str(x), ''),
