@@ -60,6 +60,7 @@
             {% if current_user.is_authenticated %}
             <li {% if request.endpoint == 'views.consulta' %} class="active" {% endif %}><a href="{{ url_for('views.consulta') }}">Consulta</a></li>
             <li {% if request.endpoint == 'views.resumo' %} class="active" {% endif %}><a href="{{ url_for('views.resumo') }}">Resumo</a></li>
+            {% if current_user.is_admin %}
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -71,6 +72,7 @@
                 <li><a>One more separated link</a></li> -->
               </ul>
             </li>
+            {% endif %}
             {% endif %}
           </ul>
           <ul class="nav navbar-nav pull-right">

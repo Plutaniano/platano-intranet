@@ -160,12 +160,18 @@ def resumo():
 @views.route('/inserir_tabela')
 @login_required
 def inserir_tabela():
+    if not current_user.is_admin:
+        return 'Não autorizado'
+        
     return render_template('pages/inserir_tabela.html', uploadform=UploadForm())
 
 
 @views.route('/upload', methods=['POST'])
 @login_required
 def upload():
+    if not current_user.is_admin:
+        return 'Não autorizado'
+
     form = UploadForm()
     f = form.planilha.data
     date = form.mes_de_entrada.data
@@ -180,6 +186,9 @@ def upload():
 @views.route('/comissoes')
 @login_required
 def comissoes():
+    if not current_user.is_admin:
+        return 'Não autorizado'
+
     assessores = db.session.query(Assessor)
     return render_template('pages/comissoes.html', assessores=assessores)
 
