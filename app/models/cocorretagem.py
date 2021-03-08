@@ -1,6 +1,6 @@
-from sqlalchemy import Integer, String, Float, Boolean, Date, Column, func, ForeignKey
+from sqlalchemy import Integer, String, Float, Date, Column, func
+
 from . import db
-from typing import Dict
 
 
 class CoCorretagem(db.Model):

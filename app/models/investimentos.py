@@ -1,8 +1,6 @@
-from sqlalchemy import Integer, String, Float, Boolean, Date, Column, ForeignKey, func
-from . import db
-from flask import current_app
-from typing import Dict
+from sqlalchemy import Integer, String, Float, Date, Column, func
 
+from . import db
 
 
 class Investimentos(db.Model):

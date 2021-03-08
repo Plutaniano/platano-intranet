@@ -1,10 +1,10 @@
-from typing import Union, Dict, Set
+import datetime
+
 from flask import current_app
 from flask_login import UserMixin
 from sqlalchemy import Integer, String, Float, Boolean, Column
 from sqlalchemy.ext.declarative import declarative_base
-import datetime
-from typing import Dict
+
 from . import db
 
 class Assessor(UserMixin, db.Model):

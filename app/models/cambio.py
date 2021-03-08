@@ -1,6 +1,6 @@
 from sqlalchemy import Integer, String, Float, Boolean, Date, Column, func, ForeignKey
+
 from . import db
-from typing import Dict
 
 class Cambio(db.Model):
   __tablename__ = 'cambio'

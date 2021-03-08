@@ -27,6 +27,10 @@ def currency(value):
     return t.replace('*', '.')
 
 @app.template_filter()
+def none_filter(value):
+    return value or '-'
+
+@app.template_filter()
 def percent(value):
     value *= 100
     return "{0:,.2f} %".format(value)
