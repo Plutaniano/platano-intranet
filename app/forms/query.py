@@ -19,7 +19,7 @@ class QueryForm(FlaskForm):
                          choices=[
                              ('investimentos', 'Investimentos'),
                              ('previdencia', 'Previdência'),
-                             ('co_corretagem', 'Co-Corretagem'),
+                             ('cocorretagem', 'Co-Corretagem'),
                              ('banco_xp', 'Banco XP'),
                              ('cambio', 'Câmbio')
                              ])

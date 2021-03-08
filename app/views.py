@@ -107,28 +107,30 @@ def consulta():
 @views.route('/resumo', methods=['GET', 'POST'])
 @login_required
 def resumo():
+    form = ResumoForm()
+
+    # lista de assessores
     if current_user.is_admin:
         assessores = list(db.session.query(Assessor))
     else:
         assessores = [current_user]
 
-    anos_meses = set()
-    for q in app.config['TABELAS_COM_RECEITA'].values():
-        query = db.session.query(q.mes_de_entrada)
-        for q in query:
-            anos_meses.add(q[0].strftime('%Y/%m'))    
-
-    form = ResumoForm()
-
-    for i in anos_meses:
-        form.ano_mes.choices.append(i)
-
     for i in assessores:
         t = (i.codigo_a, 'A' + str(i.codigo_a) + ' - ' + str(i.nome))
         form.assessores.choices.append(t)
 
+    anos_meses = set()
+    for q in app.config['TABELAS_COM_RECEITA'].values():
+        query = db.session.query(q.mes_de_entrada).distinct()
+        for q in query:
+            anos_meses.add(q[0].strftime('%Y/%m'))    
+
+    for i in anos_meses:
+        form.ano_mes.choices.append(i)
+
+
     if request.method == 'POST':
-        assessor = load_user(request.form.get('assessores'))
+        assessor = load_user(form.assessores.data)
         ano = int(request.form.get('ano_mes').split('/')[0])
         mes = int(request.form.get('ano_mes').split('/')[1])
         ano_mes = datetime.date(ano, mes, 1)

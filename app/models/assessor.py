@@ -23,7 +23,7 @@ class Assessor(UserMixin, db.Model):
     comissao_cambio = Column('Comissão Câmbio', Float, default=0.0)
     obs = Column('Observações', String(120), default=None)
 
-    def meses_com_entrada(self) -> Set[datetime.date]:
+    def meses_com_entrada(self):
         tabelas = current_app.config['TABELAS_COM_RECEITA']
         meses_com_entrada =set()
 
