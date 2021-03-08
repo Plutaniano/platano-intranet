@@ -1,16 +1,14 @@
+import datetime
+
 from flask import Blueprint, render_template, request, url_for, redirect, Response, flash
 from flask_login import login_required, current_user, logout_user, login_user
 from werkzeug.utils import secure_filename
+
 from . import login_manager
-from .forms import ForgotForm, QueryForm, LoginForm, RegisterForm, UploadForm, ResumoForm
-import datetime
-from sqlalchemy.orm import sessionmaker
+from .forms import ForgotForm, QueryForm, LoginForm, UploadForm, ResumoForm
 from . import app
-import os
-from sqlalchemy import extract
 from .models import *
 from .utils import query_to_csv
-import datedelta
 from .parser import parse_excel
 
 views = Blueprint('views', __name__)

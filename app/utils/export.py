@@ -1,8 +1,10 @@
 import datetime
-from flask_sqlalchemy import BaseQuery
-from ..models import db
 import csv
+
 from unidecode import unidecode
+from flask_sqlalchemy import BaseQuery
+
+from ..models import db
 
 
 def query_to_csv(queries: BaseQuery, tabela: db.Model, user: str) -> str:
