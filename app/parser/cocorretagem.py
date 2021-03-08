@@ -1,13 +1,15 @@
+import datetime
+
 from openpyxl.worksheet.worksheet import Worksheet
+
 from ..models import db
 from ..models.cocorretagem import CoCorretagem
-from datetime import date, datetime
 
-def parse_co_corretagem(ws: Worksheet, mes_de_entrada: date) -> None:
+def parse_co_corretagem(ws: Worksheet, mes_de_entrada: datetime.date) -> None:
     i = 0
     for row in ws.iter_rows():
         print(f"Co-corretagem: {i}\r", end='')
-        if not isinstance(row[1].value, date):
+        if not isinstance(row[1].value, datetime.date):
             continue
         
         else:
@@ -24,7 +26,7 @@ def parse_co_corretagem(ws: Worksheet, mes_de_entrada: date) -> None:
                                 # Dados do produto
                                 seguradora=str(row[8].value),
                                 produto=str(row[9].value),
-                                data_emissao=row[10].value.date() if isinstance(row[10].value, date) else date(1970, 1, 1),
+                                data_emissao=row[10].value.date() if isinstance(row[10].value, datetime.date) else datetime.date(1970, 1, 1),
                                 reserva=int(100 * row[11].value if isinstance(row[11].value, float) else 0),
                                 tx_adm=float(row[12].value if isinstance(row[12].value, float) else 0),
                                 

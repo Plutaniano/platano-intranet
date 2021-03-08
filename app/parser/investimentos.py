@@ -1,9 +1,11 @@
+import datetime
+
 from openpyxl.worksheet.worksheet import Worksheet
+
 from ..models import db
 from ..models.investimentos import Investimentos
-from datetime import date, datetime
 
-def parse_investimentos(ws: Worksheet, mes_de_entrada: date) -> None:
+def parse_investimentos(ws: Worksheet, mes_de_entrada: datetime.date) -> None:
     i = 0
     for row in ws.iter_rows():
         print(f"Investimentos: {i}\r", end='')

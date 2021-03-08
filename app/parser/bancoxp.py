@@ -1,13 +1,15 @@
+import datetime
+
 from openpyxl.worksheet.worksheet import Worksheet
+
 from ..models import db
 from ..models.bancoxp import BancoXP
-from datetime import date, datetime
 
-def parse_banco_xp(ws: Worksheet, mes_de_entrada: date) -> None:
+def parse_banco_xp(ws: Worksheet, mes_de_entrada: datetime.date) -> None:
     i = 0
     for row in ws.iter_rows():
         print(f"Banco XP: {i}\r", end='')
-        if not isinstance(row[0].value, date):
+        if not isinstance(row[0].value, datetime.date):
             continue
         
         else:

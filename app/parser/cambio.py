@@ -1,9 +1,11 @@
+import datetime
+
 from openpyxl.worksheet.worksheet import Worksheet
+
 from ..models import db
 from ..models.cambio import Cambio
-from datetime import date, datetime
 
-def parse_cambio(ws: Worksheet, mes_de_entrada: date) -> None:
+def parse_cambio(ws: Worksheet, mes_de_entrada: datetime.date) -> None:
     i = 0
     for row in ws.iter_rows():
         print(f"Câmbio: {i}\r", end='')
@@ -14,7 +16,7 @@ def parse_cambio(ws: Worksheet, mes_de_entrada: date) -> None:
             entry = Cambio(     mes_de_entrada=mes_de_entrada,
                                 codigo_cliente=row[0].value,
                                 tipo=row[1].value,
-                                data=row[2].value.date() if isinstance(row[2].value, datetime) else date(int(row[2].value.split('/')[2]), int(row[2].value.split('/')[1]), 1),
+                                data=row[2].value.date() if isinstance(row[2].value, datetime.datetime) else datetime.date(int(row[2].value.split('/')[2]), int(row[2].value.split('/')[1]), 1),
                                 moeda=str(row[3].value),
                                 volume=int(100 * row[4].value),
                                 receita=int(100 * row[5].value),
