@@ -119,6 +119,7 @@ def resumo():
         t = (i.codigo_a, 'A' + str(i.codigo_a) + ' - ' + str(i.nome))
         form.assessores.choices.append(t)
 
+    # lista de anos_meses
     anos_meses = set()
     for q in app.config['TABELAS_COM_RECEITA'].values():
         query = db.session.query(q.mes_de_entrada).distinct()
@@ -129,10 +130,10 @@ def resumo():
         form.ano_mes.choices.append(i)
 
 
+
     if request.method == 'POST':
         assessor = load_user(form.assessores.data)
-        ano = int(request.form.get('ano_mes').split('/')[0])
-        mes = int(request.form.get('ano_mes').split('/')[1])
+        ano, mes = map(int, form.ano_mes.data.split('/'))
         ano_mes = datetime.date(ano, mes, 1)
         
         receita = assessor.resumo(ano_mes)
@@ -144,14 +145,16 @@ def resumo():
                 total += produto[5]
 
         total_receitas = total
+        impostos = total_receitas * -0.2
 
         for segmento in descontos:
             for produto in descontos[segmento]:
                 total += produto[1]
         
         total_descontos = total - total_receitas
+        total += impostos
 
-        return render_template('pages/resumo.html', receita=receita, descontos=descontos, total_receitas=total_receitas, total_descontos=total_descontos, total=total, form=form)
+        return render_template('pages/resumo.html', form=form, receita=receita, descontos=descontos, total_receitas=total_receitas, impostos=impostos, total_descontos=total_descontos, total=total)
     
     if request.method == 'GET':
         return render_template('pages/resumo.html', form=form)
