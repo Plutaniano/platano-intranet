@@ -49,7 +49,7 @@ class Previdencia(db.Model):
 
   # Receita
   receita_bruta_total = Column('Receita Bruta', Integer)
-  ir_sobre_receita_bruta = Column('IR sobre Receita Bruta', Float)
+  ir_sobre_receita_bruta = Column('IR sobre Receita Bruta', Integer)
   receita_liquida_total = Column('Receita Líquida Total', Integer)
   obs = Column('Observação', String(120))
   

@@ -54,7 +54,7 @@ def parse_previdencia(ws: Worksheet, mes_de_entrada: date) -> None:
 
                                 # Receita
                                 receita_bruta_total=int(100 * row[25].value),
-                                ir_sobre_receita_bruta=float(row[26].value),
+                                ir_sobre_receita_bruta=int(100 * row[26].value),
                                 receita_liquida_total=int(100 * row[27].value),
                                 obs=row[28].value or None
                                 )
