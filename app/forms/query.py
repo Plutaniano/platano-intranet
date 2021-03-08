@@ -20,6 +20,6 @@ class QueryForm(FlaskForm):
                              ('investimentos', 'Investimentos'),
                              ('previdencia', 'Previdência'),
                              ('co_corretagem', 'Co-Corretagem'),
-                             ('bancoXP', 'Banco XP'),
+                             ('banco_xp', 'Banco XP'),
                              ('cambio', 'Câmbio')
                              ])
