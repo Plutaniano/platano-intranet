@@ -18,7 +18,7 @@ TABELAS_COM_RECEITA = {
 }
 
 DEFAULT_COMISSOES = {
-    'RV': 0.25,
+    'rv': 0.25,
     'previdencia': 0.45,
     'seguros': 0.25,
     'banco_xp': 0.45,
