@@ -30,7 +30,7 @@ def parse_previdencia(ws: Worksheet, mes_de_entrada: datetime.date) -> None:
                                 # Dados do produto
                                 seguradora=str(row[8].value),
                                 produto=str(row[9].value),
-                                data_emissao=row[10].value if isinstance(row[10].value, date) else None,
+                                data_emissao=row[10].value if isinstance(row[10].value, datetime.date) else None,
                                 reserva=int(100 * row[11].value if isinstance(row[11].value, float) else 0),
                                 tx_adm=float(row[12].value if isinstance(row[12].value, float) else 0),
                                 

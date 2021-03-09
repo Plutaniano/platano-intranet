@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from flask import Blueprint, render_template, request, url_for, redirect, Response, flash
 from flask_login import login_required, current_user, logout_user, login_user
@@ -183,8 +184,9 @@ def upload():
     f = form.planilha.data
     date = form.mes_de_entrada.data
     filename = secure_filename(f.filename)
-    f.save('/tmp/' + filename)
-    results = parse_excel('/tmp/' + filename, date)
+    path = 'C:\\Windows\\Temp\\' if os.name == 'nt' else '/tmp/'
+    f.save(path + filename)
+    results = parse_excel(path + filename, date)
     results = ', '.join(i[0] for i in results if i[1])
     flash('Tabelas processadas: ' + results)
     return redirect(url_for('views.inserir_tabela'))

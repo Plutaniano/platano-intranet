@@ -51,20 +51,15 @@ class Assessor(UserMixin, db.Model):
             'Co-corretagem': list(((*i, 1, i[3] * 1) for i in t['cocorretagem'].receitas(self, mes_de_entrada)))
         }
 
-        descontos = {
-            'Descontos Prêvidencia': list((*i,) for i in t['previdencia'].descontos(self, mes_de_entrada))
-        }
-
         return resumo
 
     def descontos(self, mes_de_entrada: datetime.date):
         t = current_app.config['TABELAS_COM_RECEITA']
         
         descontos = {
-            'Descontos Previdencia': list((*i,) for i in t['previdencia'].descontos(self, mes_de_entrada)),
+            'Descontos Prêvidencia': list((*i,) for i in t['previdencia'].descontos(self, mes_de_entrada)),
 
             'Descontos Investimentos': list((*i,) for i in t['investimentos'].descontos(self, mes_de_entrada))
-
         }
 
         return descontos
