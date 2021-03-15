@@ -48,7 +48,9 @@ class Assessor(UserMixin, db.Model):
 
             'Cambio': list(((i[0], 0, 0, i[1], self.comissao_cambio, i[1] * self.comissao_cambio) for i in t['cambio'].receitas(self, mes_de_entrada))),
 
-            'Co-corretagem': list(((*i, 1, i[3] * 1) for i in t['cocorretagem'].receitas(self, mes_de_entrada)))
+            'Co-corretagem': list(((*i, 1, i[3] * 1) for i in t['cocorretagem'].receitas(self, mes_de_entrada))),
+
+            'Outros': list(((i[0], 0, 0, i[1], 1, 1 * i[1]) for i in t['outros'].receitas(self, mes_de_entrada)))
         }
 
         return resumo
@@ -59,7 +61,9 @@ class Assessor(UserMixin, db.Model):
         descontos = {
             'Descontos Prêvidencia': list((*i,) for i in t['previdencia'].descontos(self, mes_de_entrada)),
 
-            'Descontos Investimentos': list((*i,) for i in t['investimentos'].descontos(self, mes_de_entrada))
+            'Descontos Investimentos': list((*i,) for i in t['investimentos'].descontos(self, mes_de_entrada)),
+
+            'Descontos Outros': list((*i,) for i in t['outros'].descontos(self, mes_de_entrada))
         }
 
         return descontos

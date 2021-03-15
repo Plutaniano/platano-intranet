@@ -6,7 +6,7 @@ from flask_login import login_required, current_user, logout_user, login_user
 from werkzeug.utils import secure_filename
 
 from . import login_manager
-from .forms import ForgotForm, QueryForm, LoginForm, UploadForm, ResumoForm
+from .forms import ForgotForm, QueryForm, LoginForm, UploadForm, ResumoForm, OutroForm
 from . import app
 from .models import *
 from .utils import query_to_csv
@@ -192,6 +192,32 @@ def upload():
     results = ', '.join(i[0] for i in results if i[1])
     flash('Tabelas processadas: ' + results)
     return redirect(url_for('views.inserir_tabela'))
+
+
+@views.route('/adicionar_outros', methods=['GET', 'POST'])
+@login_required
+def adicionar_outros():
+    if not current_user.is_admin:
+        return 'Não autorizado'
+
+    form = OutroForm()
+    
+    if request.method == 'GET':
+        return render_template('pages/adicionar_outros.html', form=form)
+
+
+    if request.method == 'POST':
+        codigo_a = form.codigo_a.data
+        descricao = form.descricao.data
+        valor = int(100 * form.valor.data)
+        ano_mes = form.mes_de_entrada.data
+
+        entry = Outros(codigo_a=codigo_a, descricao=descricao, valor=valor, mes_de_entrada=ano_mes)
+        db.session.add(entry)
+        db.session.commit()
+
+        flash('Adicionado com sucesso.')
+        return render_template('pages/adicionar_outros.html', form=form)
 
 
 @views.route('/comissoes')

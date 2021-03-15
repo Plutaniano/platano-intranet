@@ -4,3 +4,4 @@ from .query import QueryForm
 from .register import RegisterForm
 from .upload import UploadForm
 from .resumo import ResumoForm
+from .outro import OutroForm

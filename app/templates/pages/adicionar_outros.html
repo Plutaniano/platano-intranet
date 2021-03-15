@@ -1,0 +1,27 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Adicionar Outros{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h4>Adicionar Outros</h4>
+</div>
+<div class="col-md-6 offset-md-3 mt-5">
+   <form enctype="multipart/form-data" action="{{ url_for('views.adicionar_outros') }}" method="POST">
+     <div class="form-group mt-3">
+       <label class="mr-2">Preencha para adicionar receitas/descontos extras: </label>
+       <br>
+       <label>Mês</label>
+       {{ form.mes_de_entrada(class_='datepicker', type='month') }}
+       <br>
+       <label>Código A (somente números)</label>
+       {{ form.codigo_a }}
+       <br>
+       <label>Descrição</label>
+       {{ form.descricao }}
+       <br>
+       <label>Valor</label>
+       {{ form.valor(type="number", step="0.01") }}
+     </div>
+     <button type="submit" class="btn btn-primary">Adicionar</button>
+   </form>
+</div>
+{% endblock %}
