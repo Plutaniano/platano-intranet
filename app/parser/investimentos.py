@@ -44,8 +44,8 @@ def parse_investimentos(ws: Worksheet, mes_de_entrada: datetime.date) -> None:
                                   assessor_indireto3_comissao=int(100*row[27].value)
                                   )
             db.session.add(entry)
-            db.session.commit()
             i += 1
+    db.session.commit()
     print('')
 
 def cell_to_assessor_int(cell) -> int:
