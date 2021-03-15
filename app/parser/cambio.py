@@ -20,8 +20,8 @@ def parse_cambio(ws: Worksheet, mes_de_entrada: datetime.date) -> None:
                                 moeda=str(row[3].value),
                                 volume=int(100 * row[4].value),
                                 receita=int(100 * row[5].value),
-                                taxa_cliente=int(100 * row[6].value),
-                                taxa_base=int(100 * row[7].value),
+                                taxa_cliente=int(row[6].value),
+                                taxa_base=int(row[7].value),
                                 spread_aplicado=float(row[8].value),
                                 codigo_a=int(row[10].value[1:])
                                 )

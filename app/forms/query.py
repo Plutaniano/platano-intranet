@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import SelectField
 from wtforms.validators import DataRequired
+from .. import app
 
 
 class QueryForm(FlaskForm):
@@ -17,9 +18,5 @@ class QueryForm(FlaskForm):
     tabela = SelectField('Fonte',
                          validators=[DataRequired()],
                          choices=[
-                             ('investimentos', 'Investimentos'),
-                             ('previdencia', 'Previdência'),
-                             ('cocorretagem', 'Co-Corretagem'),
-                             ('banco_xp', 'Banco XP'),
-                             ('cambio', 'Câmbio')
+                             *((name, table.__displayname__) for name, table in app.config['TABELAS_COM_RECEITA'].items())
                              ])

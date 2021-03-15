@@ -37,23 +37,23 @@
       <tr>
         {% if loop.index == 1%}<td class='text-center' style="vertical-align: middle;" rowspan="{{ receita[segmento] | length }}">{{ segmento }}</td>{% endif %}
         <td>{{ produto[0] }}</td>
-        <td class="text-right">{{ produto[1] | currency}}</td>
-        <td class="text-right">{{ produto[2] | currency}}</td>
-        <td class="text-right">{{ produto[3] | currency}}</td>
-        {% if loop.index == 1%}<td class="text-center" style="vertical-align: middle;" rowspan="{{ receita[segmento] | length }}">{{ produto[4] | percent }}</td>{% endif %}
-        <td class="text-right">{{ produto[5] | currency }}</td>
+        <td class="text-right">{{ produto[1] | fmt('currency')}}</td>
+        <td class="text-right">{{ produto[2] | fmt('currency')}}</td>
+        <td class="text-right">{{ produto[3] | fmt('currency')}}</td>
+        {% if loop.index == 1%}<td class="text-center" style="vertical-align: middle;" rowspan="{{ receita[segmento] | length }}">{{ produto[4] | fmt('percent') }}</td>{% endif %}
+        <td class="text-right">{{ produto[5] | fmt('currency') }}</td>
       </tr>
       {% endfor %}
     {% endfor %}
     <tr>
       <td colspan="5"></td>
       <td class="text-center"><b>Total Receitas</b></td>
-      <td class="text-right"><b>{{ total_receitas | currency }}</b></td>
+      <td class="text-right"><b>{{ total_receitas | fmt('currency') }}</b></td>
     </tr>
     <tr>
       <td colspan="5"></td>
       <td class="text-center"><b>Impostos (20%)</b></td>
-      <td class="text-right"><b>{{ impostos | currency }}</b></td>
+      <td class="text-right"><b>{{ impostos | fmt('currency') }}</b></td>
     </tr>
     <tr>
       <th class="text-center">Desconto</th>
@@ -65,19 +65,19 @@
       <tr>
         {% if loop.index == 1%}<td class='text-center' style="vertical-align: middle;" rowspan="{{ descontos[segmento] | length }}">{{ segmento }}</td>{% endif %}
         <td colspan="5">{{ produto[0] }}</td>
-        <td class="text-right">{{ produto[1] | currency }}</td>
+        <td class="text-right">{{ produto[1] | fmt('currency') }}</td>
       </tr>
       {% endfor %}
     {% endfor %}
     <tr>
       <td colspan="5"></td>
       <td class="text-center"><b>Total Descontos</b></td>
-      <td class="text-right"><b>{{ total_descontos | currency }}</b></td>
+      <td class="text-right"><b>{{ total_descontos | fmt('currency') }}</b></td>
     </tr>
     <tr>
       <td colspan="5"></td>
       <td class="text-center"><b>Total</b></td>
-      <td class="text-right"><b>{{ total | currency }}</b></td>
+      <td class="text-right"><b>{{ total | fmt('currency') }}</b></td>
     </tr>
   </tbody>
 </table>

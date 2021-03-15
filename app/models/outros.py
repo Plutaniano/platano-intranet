@@ -6,7 +6,7 @@ class Outros(db.Model):
   __tablename__ = 'outros'
   __displayname__ = 'Outros'
   id = Column('ENTRY ID', Integer, primary_key=True)
-  mes_de_entrada = Column('MES DE ENTRADA', Date)
+  mes_de_entrada = Column('MES DE ENTRADA', Date, nullable=False)
   comissionamento = Column('COMISSIONAMENTO', String(20), default='outros')
 
   codigo_a = Column('Código A', Integer)

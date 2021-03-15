@@ -15,24 +15,27 @@ from .parser import parse_excel
 views = Blueprint('views', __name__)
 
 @app.template_filter()
-def currency(value):
-    if value in [0, None]:
-        return '-'
+def fmt(value, filter):
 
-    value *= 0.01
-    t = "{0:,.2f}".format(value)
-    t = t.replace(',', '*')
-    t = t.replace('.', ',')
-    return t.replace('*', '.')
+    if filter == 'currency':
+        if value in [0, None]:
+            return '-'
 
-@app.template_filter()
-def none_filter(value):
-    return value or '-'
+        value *= 0.01
+        t = "{0:,.2f}".format(value)
+        t = t.replace(',', '*')
+        t = t.replace('.', ',')
+        return t.replace('*', '.')
 
-@app.template_filter()
-def percent(value):
-    value *= 100
-    return "{0:,.2f} %".format(value)
+    if filter == 'none_filter':
+        return value or '-'
+
+    if filter == 'percent':
+        value *= 100
+        return "{0:,.2f}%".format(value)
+
+    if filter == 'date':
+        return value.strftime("%d/%m/%Y")
 
 @login_manager.user_loader
 def load_user(id):
@@ -83,8 +86,7 @@ def consulta():
 
     if request.method == 'POST':
         assessor = load_user(request.form.get('assessores'))
-        ano = int(request.form.get('ano_mes').split('/')[0])
-        mes = int(request.form.get('ano_mes').split('/')[1])
+        ano, mes = map(int, request.form.get('ano_mes').split('/'))
         ano_mes = datetime.date(ano, mes, 1)
         tabela = request.form.get('tabela')
 
