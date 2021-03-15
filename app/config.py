@@ -14,7 +14,8 @@ TABELAS_COM_RECEITA = {
     'previdencia': Previdencia,
     'cocorretagem': CoCorretagem,
     'banco_xp': BancoXP,
-    'cambio': Cambio
+    'cambio': Cambio,
+    'outros': Outros
 }
 
 DEFAULT_COMISSOES = {
