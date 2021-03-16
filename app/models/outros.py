@@ -16,8 +16,8 @@ class Outros(db.Model):
   @classmethod
   def receitas(cls, assessor, mes_de_entrada):
     query = db.session.query(
-                              cls.descricao.label('Descrição'),\
-                              func.sum(cls.valor.label('Valor'))\
+                              cls.descricao,
+                              func.sum(cls.valor)
     ).group_by(
                cls.descricao
     ).filter(
@@ -36,8 +36,8 @@ class Outros(db.Model):
   @classmethod
   def descontos(cls, assessor, mes_de_entrada):
     query = db.session.query(
-                              cls.descricao.label('Descrição'),\
-                              func.sum(cls.valor.label('Valor'))\
+                              cls.descricao,
+                              func.sum(cls.valor)
     ).group_by(
                cls.descricao
     ).filter(

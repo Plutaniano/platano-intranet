@@ -6,22 +6,18 @@ from wtforms.validators import DataRequired, Length
 
 class OutroForm(FlaskForm):
     codigo_a = TextField('Código A (somente números)',
-                                validators=[
-                                    DataRequired()
-                                    ])
+                         validators=[DataRequired()]
+                        )
 
     descricao = TextField('Descrição',
-                     validators=[
-                         DataRequired(),
-                         Length(min=1, max=120)
-                         ])
+                        validators=[DataRequired(),Length(min=1, max=120)]
+                        )
 
     valor = DecimalField('Valor',
-                     validators=[
-                         DataRequired()                    
-                     ])                     
+                        validators=[DataRequired()]
+                        )                     
 
     mes_de_entrada = DateField('Ano/mês de Referência',
-                            format='%Y-%m',
-                            validators=[DataRequired()],
-                            )
+                                format='%Y-%m',
+                                validators=[DataRequired()],
+                                )

@@ -23,8 +23,8 @@ class Cambio(db.Model):
   @classmethod
   def receitas(cls, assessor, mes_de_entrada):
     query = db.session.query(
-                              cls.moeda.label('Moeda'),\
-                              func.sum(cls.receita.label('Escritório'))\
+                              cls.moeda,
+                              func.sum(cls.receita)
     ).group_by(
                cls.moeda
     ).filter(

@@ -42,10 +42,10 @@ class Investimentos(db.Model):
   @classmethod
   def receitas(cls, assessor, mes_de_entrada):
     query = db.session.query(
-                              cls.produto.label('Produto'),\
-                              func.sum(cls.receita_bruta.label('Bruto XP')),\
-                              func.sum(cls.receita_liquida.label('Líquido XP')),\
-                              func.sum(cls.comissao_escritorio.label('Escritório'))\
+                              cls.produto,
+                              func.sum(cls.receita_bruta),
+                              func.sum(cls.receita_liquida),
+                              func.sum(cls.comissao_escritorio)
     ).group_by(
                               cls.produto
     ).filter(
@@ -63,10 +63,10 @@ class Investimentos(db.Model):
   @classmethod
   def receitas_alocacao(cls, assessor, mes_de_entrada):
     query = db.session.query(
-                              cls.produto.label('Produto'),\
-                              func.sum(cls.receita_bruta.label('Bruto XP')),\
-                              func.sum(cls.receita_liquida.label('Líquido XP')),\
-                              func.sum(cls.comissao_escritorio.label('Escritório'))\
+                              cls.produto,
+                              func.sum(cls.receita_bruta),
+                              func.sum(cls.receita_liquida),
+                              func.sum(cls.comissao_escritorio)
     ).group_by(
                               cls.produto
     ).filter(
@@ -85,8 +85,8 @@ class Investimentos(db.Model):
   @classmethod
   def descontos(cls, assessor, mes_de_entrada):
     query = db.session.query(
-                              cls.produto.label('Produto'),\
-                              func.sum(cls.comissao_escritorio.label('Escritório'))\
+                              cls.produto,
+                              func.sum(cls.comissao_escritorio)
     ).group_by(
                               cls.produto
     ).filter(
