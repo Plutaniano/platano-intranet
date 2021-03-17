@@ -63,14 +63,3 @@ class CoCorretagem(db.Model):
 
     return query
 
-  showable_columns = [
-    (tipo, lambda x: x, ''),
-    (certificado, lambda x: x, ''),
-    (codigo_cliente, lambda x: x, ''),
-    (produto, lambda x: x, ''),
-    (data_emissao, lambda x: x.strftime('%Y/%m'), ''),
-    (aportes_base, lambda x: '%.2f' % x, '(R$)'),
-    (aportes_repasse_porcento, lambda x: '%.0f' % x, '(%)'),
-    (aportes_receita, lambda x: '%.2f' % x, '(R$)'),
-    (receita_total, lambda x: '%.2f' % (0.01 * x), '(R$)')
-  ]

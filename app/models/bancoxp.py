@@ -44,16 +44,3 @@ class BancoXP(db.Model):
       return [('-', 0, 0)]
 
     return query
-
-  showable_columns = [
-    (codigo_cliente, lambda x: x, ''),
-    (produto, lambda x: x, ''),
-    (data_contratacao, lambda x: x.strftime('%Y/%m/%d'), ''),
-    (data_vencimento, lambda x: x.strftime('%Y/%m/%d'), ''),
-    (valor_contratado, lambda x: '%.2f' % (0.01 * x), '(R$)'),
-    (juros_aa, lambda x: '%.2f' % (100 * x), '(%)'),
-    (comissao_escritorio_porcento_aa, lambda x: '%.2f' % (100 * x), '(%aa)'),
-    (comissao_atualizada_acumulada, lambda x: '%.2f' % (0.01 * x), '(R$)'),
-    (deducoes, lambda x: '%.2f' % (100 * x), '(R$)'),
-    (total_receita, lambda x: '%.2f' % (0.01 * x), '(R$)')
-  ]

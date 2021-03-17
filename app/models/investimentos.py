@@ -101,19 +101,6 @@ class Investimentos(db.Model):
 
     return query
 
-  showable_columns = [
-    # (coluna, função para display, unidade)
-    (classificacao,               lambda x: x, ''),
-    (produto,                     lambda x: x, ''),
-    (nivel1,                      lambda x: x, ''),
-    (nivel2,                      lambda x: x, ''),
-    (cliente,                     lambda x: x, ''),
-    (data,                        lambda x: x.strftime('%Y/%m/%d'), ''),
-    (receita_bruta,               lambda x: '%.2f' % (0.01 * x), '(R$)'),
-    (receita_liquida,             lambda x: '%.2f' % (0.01 * x), '(R$)'),
-    (comissao_escritorio_porcento,lambda x: '%.2f' % (100 * x), '(%)'),
-    (comissao_escritorio,         lambda x: '%.2f' % (0.01 * x), '(R$)')
-  ]
 
   ALOCACAO = [
     'COE',

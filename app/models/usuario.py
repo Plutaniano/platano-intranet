@@ -14,17 +14,18 @@ class Usuario(UserMixin, db.Model):
     id = Column('id', Integer, primary_key=True)
     nome = Column('Nome', String(100))
     password = Column('Senha', String(30))
-    email = Column('Email', String(120), unique=True)
-    obs = Column('Observações', String(120), default=None)
-    is_admin = Column('admin?', Boolean, default=False)
-    segmento = Column('Segmento', String(20), default=None)
-    filial = Column('Filial', String(20), default=None)
+    email = Column('Email', String(120))
+    obs = Column('Observações', String(120))
+    is_admin = Column('admin?', Boolean,)
+    segmento = Column('Segmento', String(20))
+    filial = Column('Filial', String(20))
+    fixo = Column('Fixo', Integer)
     
     codigo_a = Column('Código A', Integer)
     clientes = relationship('Cliente', backref='assessor')
 
     comissao_rv = Column('Comissão RV', Float, default=0.3)
-    comissao_alocacao = Column('Comissão Alocação', Float, default=0.3)
+    comissao_alocacao = Column('Comissão Alocação', Float, default=0.45)
     comissao_previdencia = Column('Comissão Previdência', Float, default=0.3)
     comissao_seguros = Column('Comissão Seguros', Float, default=0.3)
     comissao_bancoxp = Column('Comissão Banco XP', Float, default=0.3)
@@ -46,7 +47,7 @@ class Usuario(UserMixin, db.Model):
         t = current_app.config['TABELAS_COM_RECEITA']
         
         resumo = {
-            'Renda Variável': list(((*i, self.comissao_rv, i[3] * self.comissao_rv) for i in t['investimentos'].receitas(self, mes_de_entrada))),
+            'Renda Variável': list(((*i,) for i in t['investimentos'].receitas(self, mes_de_entrada))),
 
             'Alocação': list(((*i, self.comissao_alocacao, i[3] * self.comissao_alocacao) for i in t['investimentos'].receitas_alocacao(self, mes_de_entrada))),
 
@@ -75,19 +76,6 @@ class Usuario(UserMixin, db.Model):
         }
 
         return descontos
-
-        
-
-    showable_columns = [
-    (codigo_a, lambda x: 'A' + str(x), ''),
-    (nome, lambda x: x, ''),
-    (comissao_rv, lambda x: x, ''),
-    (comissao_alocacao, lambda x: x, ''),
-    (comissao_previdencia, lambda x: x, ''),
-    (comissao_seguros, lambda x: x, ''),
-    (comissao_bancoxp, lambda x: x, ''),
-    (comissao_cambio, lambda x: x, ''),
-  ]
 
     def get_id(self):
         '''\

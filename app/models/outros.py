@@ -52,9 +52,3 @@ class Outros(db.Model):
       return [('-', 0, 0)]
 
     return query
-
-  showable_columns = [
-    (codigo_a, lambda x: x, ''),
-    (valor, lambda x: x, ''),
-    (descricao, lambda x: x, '')
-  ]
