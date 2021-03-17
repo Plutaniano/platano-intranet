@@ -1,6 +1,6 @@
-from sqlalchemy import Integer, String, Float, Date, Column, func
+from . import db, Column, func, relationship, ForeignKey
+from . import Integer, Float, Date, String
 
-from . import db
 
 class BancoXP(db.Model):
   __tablename__ = 'banco_xp'
@@ -12,7 +12,7 @@ class BancoXP(db.Model):
   competencia = Column('Competência', Date)
   codigo_escritorio = Column('Código do Escritório', Integer)
   parceiro = Column('Parceiro', String(60))
-  codigo_a = Column('Código A', Integer)
+  codigo_a = Column('Código A', Integer, ForeignKey('usuarios.Código A'))
   operacao = Column('Operação', Integer)
   codigo_cliente = Column('Código do Cliente', Integer)
   produto = Column('Produto', String(60))

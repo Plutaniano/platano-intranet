@@ -39,7 +39,7 @@ def fmt(value, filter):
 
 @login_manager.user_loader
 def load_user(id):
-    user = db.session.query(Assessor).filter_by(codigo_a=id).first()
+    user = db.session.query(Usuario).filter_by(codigo_a=id).first()
     return user
     
 # ------------------------
@@ -62,7 +62,7 @@ def forgot():
 @login_required
 def consulta():
     if current_user.is_admin:
-        assessores = list(db.session.query(Assessor))
+        assessores = list(db.session.query(Usuario))
     else:
         assessores = [current_user]
 
@@ -114,7 +114,7 @@ def resumo():
 
     # lista de assessores
     if current_user.is_admin:
-        assessores = list(db.session.query(Assessor))
+        assessores = list(db.session.query(Usuario))
     else:
         assessores = [current_user]
 
@@ -226,7 +226,7 @@ def comissoes():
     if not current_user.is_admin:
         return 'Não autorizado'
 
-    assessores = db.session.query(Assessor)
+    assessores = db.session.query(Usuario)
     return render_template('pages/comissoes.html', assessores=assessores)
 
 

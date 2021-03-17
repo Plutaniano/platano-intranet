@@ -1,6 +1,6 @@
-from sqlalchemy import Integer, String, Float, Boolean, Date, Column, func, ForeignKey
+from . import db, Column, func, relationship, ForeignKey
+from . import Integer, Float, Date, String
 
-from . import db
 
 class Cambio(db.Model):
   __tablename__ = 'cambio'
@@ -18,7 +18,7 @@ class Cambio(db.Model):
   taxa_cliente = Column('Taxa Cliente', Float)
   taxa_base = Column('Taxa Base', Float)
   spread_aplicado = Column('Spread Aplicado', Float)
-  codigo_a = Column('Código A', Integer)
+  codigo_a = Column('Código A', Integer, ForeignKey('usuarios.Código A'))
 
   @classmethod
   def receitas(cls, assessor, mes_de_entrada):

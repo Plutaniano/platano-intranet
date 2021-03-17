@@ -1,7 +1,5 @@
-from sqlalchemy import Integer, String, Float, Date, Column, func
-
-from . import db
-
+from . import db, Column, func, relationship, ForeignKey
+from . import Integer, Float, Date, String
 
 class CoCorretagem(db.Model):
   __tablename__ = 'cocorretagem'
@@ -13,7 +11,7 @@ class CoCorretagem(db.Model):
   tipo = Column('Tipo', String(30))
   competencia = Column('Competência', Date)
   parceiro = Column('Parceiro', String(60))
-  codigo_a = Column('Código A', Integer)
+  codigo_a = Column('Código A', Integer, ForeignKey('usuarios.Código A'))
 
   certificado = Column('Certificado', Integer)
   cpf = Column('CPF', String(11))

@@ -1,6 +1,5 @@
-from sqlalchemy import Integer, String, Float, Date, Column, func
-
-from . import db
+from . import db, Column, func, relationship, ForeignKey
+from . import Integer, Float, Date, String
 
 class Previdencia(db.Model):
   __tablename__ = 'previdencia'
@@ -14,7 +13,7 @@ class Previdencia(db.Model):
   tipo = Column('Tipo', String(50))
   competencia = Column('Competencia', Date)
   parceiro = Column('Parceiro', String(60))
-  codigo_a = Column('Código A', Integer)
+  codigo_a = Column('Código A', Integer, ForeignKey('usuarios.Código A'))
   certificado = Column('Certificado', Integer)
   cpf = Column('CPF', String(11))
   codigo_cliente = Column('Código do Cliente', Integer)
@@ -63,7 +62,7 @@ class Previdencia(db.Model):
     ).group_by(
                             cls.produto
     ).filter(
-                            cls.produto.notin_(cls.DESCONTOS),
+                            cls.tipo.in_(cls.RECEITAS),
                             cls.codigo_a == assessor.codigo_a,
                             cls.mes_de_entrada == mes_de_entrada,
         )
@@ -106,6 +105,11 @@ class Previdencia(db.Model):
     (obs, lambda x: x, ''),
   ]
 
+  RECEITAS = [
+    "Adiantamento Previdência",
+    "Estorno Adiantamento",
+    "Previdência"
+  ]
+
   DESCONTOS = [
-    'Incentivo Previdência - Adiantamento ROA'
   ]

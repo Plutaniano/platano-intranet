@@ -9,7 +9,7 @@ def parse_previdencia(ws: Worksheet, mes_de_entrada: datetime.date) -> None:
     i = 0
     for row in ws.iter_rows():
         print(f"Prêvidencia: {i}\r", end='')
-        if row[2].value not in ['PLATANO AGENTE AUTONOMO DE INVESTIMENTOS LTDA', 'Platano Investimentos']:
+        if not isinstance(row[1].value, datetime.date):
             continue
         
         else:
