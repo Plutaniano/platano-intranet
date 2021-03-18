@@ -1,23 +1,27 @@
-from . import db, Column, func, relationship, ForeignKey
-from . import Integer, Float, Date, String
+from . import db
+
 
 class Outros(db.Model):
   __tablename__ = 'outros'
   __displayname__ = 'Outros'
   
-  id = Column('ENTRY ID', Integer, primary_key=True)
-  mes_de_entrada = Column('MES DE ENTRADA', Date, nullable=False)
-  comissionamento = Column('COMISSIONAMENTO', String(20), default='outros')
+  id= db.Column('ENTRY ID', db.Integer, primary_key=True)
+  mes_de_entrada= db.Column('MES DE ENTRADA', db.Date, nullable=False)
+  comissionamento= db.Column('COMISSIONAMENTO', db.String(20), default='outros')
 
-  codigo_a = Column('Código A', Integer, ForeignKey('usuarios.Código A'))
-  valor = Column('Valor', Integer)
-  descricao = Column('Descrição', String(120))
+  codigo_a= db.Column('Código A', db.Integer, db.ForeignKey('usuarios.Código A'))
+  valor= db.Column('Valor', db.Integer)
+  descricao= db.Column('Descrição', db.String(120))
 
   @classmethod
   def receitas(cls, assessor, mes_de_entrada):
     query = db.session.query(
                               cls.descricao,
-                              func.sum(cls.valor),
+                              db.literal(0),
+                              db.literal(0),
+                              db.literal(0),
+                              db.literal(1),
+                              db.func.sum(cls.valor),
     ).group_by(
                cls.descricao
     ).filter(
@@ -29,7 +33,7 @@ class Outros(db.Model):
     query = list(query)
 
     if len(query) == 0:
-      return [('-', 0, 0)]
+      return [('-', 0, 0, 0, 1, 0)]
 
     return query
 
@@ -37,7 +41,7 @@ class Outros(db.Model):
   def descontos(cls, assessor, mes_de_entrada):
     query = db.session.query(
                               cls.descricao,
-                              func.sum(cls.valor)
+                              db.func.sum(cls.valor)
     ).group_by(
                cls.descricao
     ).filter(

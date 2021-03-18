@@ -17,7 +17,7 @@ class OutroForm(FlaskForm):
                         validators=[DataRequired()]
                         )                     
 
-    mes_de_entrada = DateField('Ano/mês de Referência',
+    mes_de_entrada =DateField('Ano/mês de Referência',
                                 format='%Y-%m',
                                 validators=[DataRequired()],
                                 )

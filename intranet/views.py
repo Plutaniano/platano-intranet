@@ -67,7 +67,7 @@ def consulta():
         assessores = [current_user]
 
     anos_meses = set()
-    for q in app.config['TABELAS_COM_RECEITA'].values():
+    for q in TABELAS_COM_RECEITA.values():
         query = db.session.query(q.mes_de_entrada)
         for q in query:
             q = q[0]
@@ -90,7 +90,7 @@ def consulta():
         ano_mes = datetime.date(ano, mes, 1)
         tabela = request.form.get('tabela')
 
-        d = app.config['TABELAS_COM_RECEITA']
+        d = TABELAS_COM_RECEITA
 
         data = db.session\
                     .query(*(i[0] for i in d[tabela].showable_columns))\
@@ -124,7 +124,7 @@ def resumo():
 
     # lista de anos_meses
     anos_meses = set()
-    for q in app.config['TABELAS_COM_RECEITA'].values():
+    for q in TABELAS_COM_RECEITA.values():
         query = db.session.query(q.mes_de_entrada).distinct()
         for q in query:
             anos_meses.add(q[0].strftime('%Y/%m'))    
@@ -144,6 +144,7 @@ def resumo():
 
         total = 0
         for segmento in receita:
+            print('- '+ segmento)
             for produto in receita[segmento]:
                 total += produto[5]
 

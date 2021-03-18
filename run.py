@@ -1,4 +1,4 @@
-from app import app
+from intranet import app
 
 if __name__ == '__main__':
     app.run()
