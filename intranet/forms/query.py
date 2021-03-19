@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import SelectField
 from wtforms.validators import DataRequired
 from .. import app
-from ..models import TABELAS_COM_RECEITA
+from intranet.models import db, Usuario, TABELAS_COM_RECEITA
 
 
 class QueryForm(FlaskForm):
@@ -11,9 +11,9 @@ class QueryForm(FlaskForm):
                           choices=[]
                           )
 
-    assessores = SelectField('Assessor',
+    id = SelectField('Usuários',
                              validators=[DataRequired()],
-                             choices=[]
+                             choices=list(db.session.query(Usuario.id, Usuario.nome))
                              )
 
     tabela = SelectField('Fonte',

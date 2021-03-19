@@ -82,8 +82,7 @@ class Usuario(UserMixin, db.Model):
         '''\
         Função para a utilização da biblioteca flask_login\
         '''
-        return self.codigo_a
+        return self.id  
 
     def __repr__(self):
-        user_type = 'ADMIN' if self.is_admin else 'USER'
-        return f"<User [{user_type}] A{self.codigo_a}:{self.nome}>"
+        return f"<User [{self.segmento}] ID[{self.id}]:{self.nome}>"

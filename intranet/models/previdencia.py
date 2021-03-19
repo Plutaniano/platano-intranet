@@ -51,6 +51,26 @@ class Previdencia(db.Model):
   receita_liquida_total = db.Column('Receita Líquida Total', db.Integer)
   obs = db.Column('Observação', db.String(120))
   
+
+  @classmethod
+  def consulta(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                              cls.tipo,
+                              cls.certificado,
+                              cls.up,
+                              cls.produto,
+                              cls.receita_bruta_total,
+                              cls.ir_sobre_receita_bruta,
+                              cls.receita_liquida_total,
+                              cls.obs
+    ).filter(
+                              cls.codigo_a == assessor.codigo_a,
+                              cls.mes_de_entrada == mes_de_entrada
+    )
+
+    return query
+
+
   @classmethod
   def receitas(cls, assessor, mes_de_entrada):
     # (Descrição, Bruto XP, Líquido XP, Escritório, Comissão, Total)
@@ -65,7 +85,7 @@ class Previdencia(db.Model):
                             cls.produto
     ).filter(
                             cls.tipo.in_(cls.RECEITAS),
-                            cls.codigo_a == assessor.codigo_a,
+                            cls.email == assessor.email,
                             cls.mes_de_entrada == mes_de_entrada,
         )
 
@@ -84,7 +104,7 @@ class Previdencia(db.Model):
                             cls.produto
     ).filter(
                             cls.produto.in_(cls.DESCONTOS),
-                            cls.codigo_a == assessor.codigo_a,
+                            cls.email == assessor.email,
                             cls.mes_de_entrada == mes_de_entrada,
         )
 
@@ -93,6 +113,12 @@ class Previdencia(db.Model):
       return [('-', 0)]
 
     return query
+
+  filters = {
+    'receita_bruta_total': 'currency',
+    'ir_sobre_receita_bruta': 'currency',
+    'receita_liquida_total': 'currency'
+  }
 
   RECEITAS = [
     "Adiantamento Previdência",

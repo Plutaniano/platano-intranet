@@ -45,3 +45,36 @@ class BancoXP(db.Model):
       return [('-', 0, 0, 0, assessor.comissao_bancoxp, 0)]
 
     return query
+
+
+  @classmethod
+  def consulta(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                              cls.id,
+                              cls.codigo_cliente,
+                              cls.produto,
+                              cls.data_contratacao,
+                              cls.data_vencimento,
+                              cls.valor_contratado,
+                              cls.juros_aa,
+                              cls.comissao_escritorio_porcento_aa,
+                              cls.comissao_atualizada_acumulada,
+                              cls.deducoes,
+                              cls.total_receita
+    ).filter(
+                              cls.codigo_a == assessor.codigo_a,
+                              cls.mes_de_entrada == mes_de_entrada
+    )
+
+    return query
+
+  filters = {
+    'data_contratacao': 'date',
+    'data_vencimento': 'date',
+    'valor_contratado': 'currency',
+    'juros_aa': 'percent',
+    'comissao_escritorio_porcento_aa': 'percent',
+    'comissao_atualizada_acumulada': 'currency',
+    'deducoes': 'percent',
+    'total_receita': 'currency'
+  }

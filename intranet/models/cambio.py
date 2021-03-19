@@ -40,3 +40,32 @@ class Cambio(db.Model):
       return [('-', 0, 0, 0, assessor.comissao_cambio, 0)]
 
     return query
+  
+  @classmethod
+  def consulta(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                              cls.id,
+                              cls.codigo_cliente,
+                              cls.tipo,
+                              cls.data,
+                              cls.moeda,
+                              cls.volume,
+                              cls.receita,
+                              cls.taxa_cliente,
+                              cls.taxa_base,
+                              cls.spread_aplicado,
+    ).filter(
+                              cls.codigo_a == assessor.codigo_a,
+                              cls.mes_de_entrada == mes_de_entrada
+    )
+
+    return query
+
+  filters = {
+    'data': 'date',
+    'volume': 'currency',
+    'receita': 'currency',
+    'taxa_cliente': 'percent',
+    'taxa_base': 'percent',
+    'spread_aplicado': 'percent'
+  }

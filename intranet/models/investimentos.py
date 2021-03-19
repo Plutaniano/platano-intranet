@@ -60,6 +60,7 @@ class Investimentos(db.Model):
 
     return query
 
+  
   @classmethod
   def receitas_alocacao(cls, assessor, mes_de_entrada):
     query = db.session.query(
@@ -83,6 +84,27 @@ class Investimentos(db.Model):
 
     return query
 
+
+  @classmethod
+  def consulta(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                              cls.id,
+                              cls.classificacao,
+                              cls.produto,
+                              cls.nivel1,
+                              cls.nivel2,
+                              cls.cliente,
+                              cls.data,
+                              cls.receita_bruta,
+                              cls.receita_liquida,
+                              cls.comissao_escritorio_porcento,
+                              cls.comissao_escritorio
+    ).filter(
+                              cls.codigo_a == assessor.codigo_a,
+                              cls.mes_de_entrada == mes_de_entrada
+    )
+
+    return query
   
   @classmethod
   def descontos(cls, assessor, mes_de_entrada):
@@ -103,6 +125,14 @@ class Investimentos(db.Model):
 
     return query
 
+  filters = {
+    'codigo_a': 'none_filter',
+    'receita_bruta': 'currency',
+    'receita_liquida': 'currency',
+    'comissao_escritorio_porcento': 'percent',
+    'comissao_escritorio': 'currency',
+    'data': 'date'
+  }
 
   ALOCACAO = [
     'COE',

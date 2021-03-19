@@ -42,6 +42,28 @@ class CoCorretagem(db.Model):
   receita_total = db.Column('Receita Total', db.Integer)
   obs = db.Column('Observações', db.String(100))
   
+  
+  @classmethod
+  def consulta(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                              cls.id,
+                              cls.tipo,
+                              cls.certificado,
+                              cls.codigo_cliente,
+                              cls.produto,
+                              cls.data_emissao,
+                              cls.aportes_base,
+                              cls.aportes_repasse_porcento,
+                              cls.aportes_receita,
+                              cls.receita_total,
+                              cls.obs
+    ).filter(
+                              cls.codigo_a == assessor.codigo_a,
+                              cls.mes_de_entrada == mes_de_entrada
+    )
+
+    return query
+  
   @classmethod
   def receitas(cls, assessor, mes_de_entrada):
     query = db.session.query(
@@ -64,3 +86,10 @@ class CoCorretagem(db.Model):
 
     return query
 
+  filters = {
+    'data_emissao': 'date',
+    'aportes_base': 'currency',
+    'aportes_repasse_porcent': 'percent',
+    'aportes_receita': 'currency',
+    'receita_total': 'currency',
+  }

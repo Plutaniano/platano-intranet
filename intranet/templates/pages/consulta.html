@@ -9,7 +9,7 @@
         {{ form.ano_mes(class_='form-control first-input', required=true) }}
         <br>
         <div {% if not current_user.is_admin %} class="hidden" {% endif %}>
-        {{ form.assessores(class_='form-control', required=true) }}
+        {{ form.id(class_='form-control', required=true) }}
         <br>
         </div>
         {{ form.tabela(class_='form-control', required=true) }}
@@ -21,123 +21,19 @@
 <br>
 
 {% if tabela %}
-{% set t = tabela %}
-
-{# INVESTIMENTOS #}
-{% if tabela.__tablename__ == 'investimentos' %}
-  {% 
-    set colunas = [
-                    (t.classificacao.name, 'none_filter'),
-                    (t.produto.name, 'none_filter'),
-                    (t.nivel1.name, 'none_filter'),
-                    (t.nivel2.name, 'none_filter'),
-                    (t.cliente.name, 'none_filter'),
-                    (t.data.name, 'date'),
-                    (t.receita_bruta.name + ' (R$)', 'currency'),
-                    (t.receita_liquida.name + ' (R$)', 'currency'),
-                    (t.comissao_escritorio_porcento.name + ' (%)', 'percent'),
-                    (t.comissao_escritorio.name + ' (R$)', 'currency')
-                  ]
-  %}
-{% endif %}
-
-{# PREVIDENCIA #}
-{% if tabela.__tablename__ == 'previdencia' %}
-  {% 
-    set colunas = [
-                    (t.competencia.name,                     'date'),
-                    (t.tipo.name,                            'none_filter'),
-                    (t.certificado.name,                     'none_filter'),
-                    (t.codigo_cliente.name,                  'none_filter'),
-                    (t.up.name,                              'none_filter'),
-                    (t.produto.name,                         'none_filter'),
-                    (t.receita_bruta_total.name + ' (R$)',   'currency'),
-                    (t.ir_sobre_receita_bruta.name + ' (R$)','currency'),
-                    (t.receita_liquida_total.name + ' (R$)', 'currency'),
-                    (t.obs.name,                             'none_filter')
-                  ]
-  %}
-{% endif %}
-
-{# COCORRETAGEM #}
-{% if tabela.__tablename__ == 'cocorretagem' %}
-  {% 
-    set colunas = [
-                    (t.tipo.name,                              'none_filter'),
-                    (t.certificado.name,                       'none_filter'),
-                    (t.codigo_cliente.name,                    'none_filter'),
-                    (t.produto.name,                           'none_filter'),
-                    (t.data_emissao.name,                      'date'),
-                    (t.aportes_base.name + ' (R$)',            'currency'),
-                    (t.aportes_repasse_porcento.name + ' (%)', 'percent'),
-                    (t.aportes_receita.name + ' (R$)',         'currency'),
-                    (t.receita_total.name + ' (R$)',           'currency')
-                  ]
-  %}
-{% endif %}
-
-{# BANCO XP #}
-{% if tabela.__tablename__ == 'banco_xp' %}
-  {% 
-    set colunas = [
-                    (t.codigo_cliente.name,                             'none_filter'),
-                    (t.produto.name,                                    'none_filter'),
-                    (t.data_contratacao.name,                           'date'),
-                    (t.data_vencimento.name,                            'date'),
-                    (t.valor_contratado.name,                           'currency'),
-                    (t.juros_aa.name + ' (%)',                          'percent'),
-                    (t.comissao_escritorio_porcento_aa.name + ' (%)',   'percent'),
-                    (t.comissao_atualizada_acumulada.name + ' (R$)',    'currency'),
-                    (t.deducoes.name + ' (R$)',                         'currency'),
-                    (t.total_receita.name + ' (R$)',                    'currency')
-                  ]
-  %}
-{% endif %}
-
-{# CÂMBIO #}
-{% if tabela.__tablename__ == 'cambio' %}
-  {% 
-    set colunas = [
-                    (t.codigo_cliente.name,            'none_filter'),
-                    (t.tipo.name,                      'none_filter'),
-                    (t.data.name,                      'date'),
-                    (t.moeda.name,                     'none_filter'),
-                    (t.volume.name,                    'currency'),
-                    (t.receita.name + ' (R$)',         'currency'),
-                    (t.taxa_cliente.name + ' (%)',     'percent'),
-                    (t.taxa_base.name + ' (%)',        'percent'),
-                    (t.spread_aplicado.name + ' (%)',  'percent')
-                  ]
-  %}
-{% endif %}
-
-{# OUTROS #}
-{% if tabela.__tablename__ == 'outros' %}
-  {% 
-    set colunas = [
-                    (t.codigo_a.name,             'none_filter'),
-                    (t.valor.name + ' (R$)',      'currency'),
-                    (t.descricao.name,            'none_filter'),
-                  ]
-  %}
-{% endif %}
-
-{% endif %}
-
-{% if tabela %}
 <table class="table table-hover table-striped table-sm">
   <thead>
     <tr>
-      {% for col, _ in colunas %}
-      <th scope="col" class="text-center">{{ col }}</th>
+      {% for col in query.column_descriptions %}
+      <th scope="col" class="text-center">{{ col['name'] }}</th>
       {% endfor %}
     </tr>
   </thead>
   <tbody>
-    {% for row in data %}
+    {% for row in query %}
     <tr>
-      {% for item in row %}
-        {% set filter = colunas[loop.index - 1][1] %}
+      {% for item, col in row | jinja_zip(row.keys()) %}
+      {% set filter = tabela.filters.get(col, 'none_filter') %}
         <td class="text-center">{{ item | fmt(filter) }}</td>
       {% endfor %}
     </tr>

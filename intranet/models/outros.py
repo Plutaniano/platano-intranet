@@ -14,6 +14,18 @@ class Outros(db.Model):
   descricao= db.Column('Descrição', db.String(120))
 
   @classmethod
+  def consulta(cls, assessor, mes_de_entrada):
+    query = db.session.query(
+                              cls.descricao,
+                              cls.valor
+    ).filter(
+                              cls.codigo_a == assessor.codigo_a,
+                              cls.mes_de_entrada == mes_de_entrada
+    )
+
+    return query
+
+  @classmethod
   def receitas(cls, assessor, mes_de_entrada):
     query = db.session.query(
                               cls.descricao,
@@ -25,7 +37,7 @@ class Outros(db.Model):
     ).group_by(
                cls.descricao
     ).filter(
-               cls.codigo_a == assessor.codigo_a,
+               cls.email == assessor.email,
                cls.mes_de_entrada == mes_de_entrada,
                cls.valor >= 0
     )
@@ -45,14 +57,17 @@ class Outros(db.Model):
     ).group_by(
                cls.descricao
     ).filter(
-               cls.codigo_a == assessor.codigo_a,
+               cls.email == assessor.email,
                cls.mes_de_entrada == mes_de_entrada,
                cls.valor < 0
     )
 
     query = list(query)
-
     if len(query) == 0:
       return [('-', 0, 0)]
 
     return query
+
+  filters = {
+    'valor': 'currency'
+  }

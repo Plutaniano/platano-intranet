@@ -16,7 +16,6 @@ views = Blueprint('views', __name__)
 
 @app.template_filter()
 def fmt(value, filter):
-
     if filter == 'currency':
         if value in [0, None]:
             return '-'
@@ -37,10 +36,17 @@ def fmt(value, filter):
     if filter == 'date':
         return value.strftime("%d/%m/%Y")
 
+@app.template_filter()
+def jinja_zip(*args):
+    return zip(*args)
+
 @login_manager.user_loader
-def load_user(id):
-    user = db.session.query(Usuario).filter_by(codigo_a=id).first()
-    return user
+def load_user(id=None, **kw):
+    if id:
+        return Usuario.query.get(id)
+    else:
+        return db.session.query(Usuario).filter_by(**kw).first()
+    
     
 # ------------------------
 #        user pages
@@ -73,31 +79,21 @@ def consulta():
             q = q[0]
             anos_meses.add(q.strftime('%Y/%m'))
     
-    form = QueryForm(request.form)
+    form = QueryForm()
     for i in anos_meses:
         form.ano_mes.choices.append(i)
-
-    for i in assessores:
-        t = (i.codigo_a, 'A' + str(i.codigo_a) + ' - ' + str(i.nome))
-        form.assessores.choices.append(t)
 
     if request.method == 'GET':
         return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, form=form)
 
     if request.method == 'POST':
-        assessor = load_user(request.form.get('assessores'))
+        assessor = load_user(id=form.id.data)
         ano, mes = map(int, request.form.get('ano_mes').split('/'))
         ano_mes = datetime.date(ano, mes, 1)
         tabela = request.form.get('tabela')
 
-        d = TABELAS_COM_RECEITA
+        query = TABELAS_COM_RECEITA[tabela].consulta(assessor, ano_mes)
 
-        data = db.session\
-                    .query(*(i[0] for i in d[tabela].showable_columns))\
-                    .filter(
-                        d[tabela].codigo_a == assessor.codigo_a,
-                        d[tabela].mes_de_entrada == ano_mes
-                        )
 
         if request.form.get('action')== 'Exportar':
             text = query_to_csv(data, d[tabela], assessor.codigo_a)
@@ -105,7 +101,7 @@ def consulta():
                             mimetype="text/csv",
                             headers={"Content-disposition": "attachment; filename=tabela.csv"})
 
-        return render_template('pages/consulta.html', assessores=assessores, anos_meses=anos_meses, data=data, form=form, tabela=d[tabela])
+        return render_template('pages/consulta.html', query=query, form=form, tabela=TABELAS_COM_RECEITA[tabela])
 
 @views.route('/resumo', methods=['GET', 'POST'])
 @login_required
@@ -119,7 +115,7 @@ def resumo():
         assessores = [current_user]
 
     for i in assessores:
-        t = (i.codigo_a, 'A' + str(i.codigo_a) + ' - ' + str(i.nome))
+        t = (i.id, str(i.nome))
         form.assessores.choices.append(t)
 
     # lista de anos_meses
@@ -135,7 +131,7 @@ def resumo():
 
 
     if request.method == 'POST':
-        assessor = load_user(form.assessores.data)
+        assessor = load_user(id=form.assessores.data)
         ano, mes = map(int, form.ano_mes.data.split('/'))
         ano_mes = datetime.date(ano, mes, 1)
         
@@ -208,12 +204,12 @@ def adicionar_outros():
 
 
     if request.method == 'POST':
-        codigo_a = form.codigo_a.data
+        id = form.id.data
         descricao = form.descricao.data
         valor = int(100 * form.valor.data)
         ano_mes = form.mes_de_entrada.data
 
-        entry = Outros(codigo_a=codigo_a, descricao=descricao, valor=valor, mes_de_entrada=ano_mes)
+        entry = Outros(id=id, descricao=descricao, valor=valor, mes_de_entrada=ano_mes)
         db.session.add(entry)
         db.session.commit()
 
@@ -239,14 +235,18 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('views.home'))
 
-    form = LoginForm(request.form)
+    form = LoginForm()
     if form.validate_on_submit():
-        user = load_user(form.codigo_a.data)
+        print('1: ',form.email.data)
+        user = load_user(email=form.email.data)
+
         if user is None or user.password != form.password.data:
             flash('Credenciais invalidas')
             return redirect(url_for('views.login'))
+
         login_user(user)                                        # TODO: Adicionar remember_me
         return redirect(url_for('views.home'))
+
     return render_template('forms/login.html', form=form)
 
 @views.route('/logout')
