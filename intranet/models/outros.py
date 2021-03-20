@@ -5,13 +5,13 @@ class Outros(db.Model):
   __tablename__ = 'outros'
   __displayname__ = 'Outros'
   
-  id= db.Column('ENTRY ID', db.Integer, primary_key=True)
-  mes_de_entrada= db.Column('MES DE ENTRADA', db.Date, nullable=False)
-  comissionamento= db.Column('COMISSIONAMENTO', db.String(20), default='outros')
+  id = db.Column('ENTRY ID', db.Integer, primary_key=True)
+  mes_de_entrada = db.Column('MES DE ENTRADA', db.Date, nullable=False)
+  comissionamento = db.Column('COMISSIONAMENTO', db.String(20), default='outros')
 
-  codigo_a= db.Column('Código A', db.Integer, db.ForeignKey('usuarios.Código A'))
-  valor= db.Column('Valor', db.Integer)
-  descricao= db.Column('Descrição', db.String(120))
+  codigo_a = db.Column('Código A', db.Integer, db.ForeignKey('usuarios.Código A'))
+  valor = db.Column('Valor', db.Integer)
+  descricao = db.Column('Descrição', db.String(120))
 
   @classmethod
   def consulta(cls, assessor, mes_de_entrada):
@@ -37,7 +37,7 @@ class Outros(db.Model):
     ).group_by(
                cls.descricao
     ).filter(
-               cls.email == assessor.email,
+               cls.codigo_a == assessor.codigo_a,
                cls.mes_de_entrada == mes_de_entrada,
                cls.valor >= 0
     )
@@ -57,7 +57,7 @@ class Outros(db.Model):
     ).group_by(
                cls.descricao
     ).filter(
-               cls.email == assessor.email,
+               cls.codigo_a == assessor.codigo_a,
                cls.mes_de_entrada == mes_de_entrada,
                cls.valor < 0
     )

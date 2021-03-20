@@ -85,7 +85,7 @@ class Previdencia(db.Model):
                             cls.produto
     ).filter(
                             cls.tipo.in_(cls.RECEITAS),
-                            cls.email == assessor.email,
+                            cls.codigo_a == assessor.codigo_a,
                             cls.mes_de_entrada == mes_de_entrada,
         )
 
