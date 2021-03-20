@@ -86,3 +86,13 @@ class Usuario(UserMixin, db.Model):
 
     def __repr__(self):
         return f"<User [{self.segmento}] ID[{self.id}]:{self.nome}>"
+
+    filters = {
+        'comissao_rv': 'percent',
+        'comissao_alocacao': 'percent',
+        'comissao_seguros': 'percent',
+        'comissao_previdencia': 'percent',
+        'comissao_cambio': 'percent',
+        'comissao_bancoxp': 'percent',
+        'fixo': 'currency',
+    }

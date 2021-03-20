@@ -9,7 +9,7 @@ class ResumoForm(FlaskForm):
                           choices=[]
                           )
 
-    assessores = SelectField('Assessor',
+    usuarios = SelectField('Usuários',
                              validators=[DataRequired()],
                              choices=[]
                              )

@@ -6,7 +6,7 @@ from flask_login import login_required, current_user, logout_user, login_user
 from werkzeug.utils import secure_filename
 
 from . import login_manager
-from .forms import ForgotForm, QueryForm, LoginForm, UploadForm, ResumoForm, OutroForm
+from intranet.forms import ForgotForm, QueryForm, LoginForm, UploadForm, ResumoForm, OutroForm
 from . import app
 from .models import *
 from .utils import query_to_csv
@@ -90,9 +90,9 @@ def consulta():
         assessor = load_user(id=form.id.data)
         ano, mes = map(int, request.form.get('ano_mes').split('/'))
         ano_mes = datetime.date(ano, mes, 1)
-        tabela = request.form.get('tabela')
+        tabela = TABELAS_COM_RECEITA[request.form.get('tabela')]
 
-        query = TABELAS_COM_RECEITA[tabela].consulta(assessor, ano_mes)
+        query = tabela.consulta(assessor, ano_mes)
 
 
         if request.form.get('action')== 'Exportar':
@@ -101,7 +101,7 @@ def consulta():
                             mimetype="text/csv",
                             headers={"Content-disposition": "attachment; filename=tabela.csv"})
 
-        return render_template('pages/consulta.html', query=query, form=form, tabela=TABELAS_COM_RECEITA[tabela])
+        return render_template('pages/consulta.html', query=query, form=form, tabela=tabela)
 
 @views.route('/resumo', methods=['GET', 'POST'])
 @login_required
@@ -140,7 +140,6 @@ def resumo():
 
         total = 0
         for segmento in receita:
-            print('- '+ segmento)
             for produto in receita[segmento]:
                 total += produto[5]
 
@@ -223,8 +222,23 @@ def comissoes():
     if not current_user.is_admin:
         return 'Não autorizado'
 
-    assessores = db.session.query(Usuario)
-    return render_template('pages/comissoes.html', assessores=assessores)
+    query = db.session.query(
+        Usuario.id,
+        Usuario.nome,
+        Usuario.email,
+        Usuario.segmento,
+        Usuario.filial,
+        Usuario.fixo,
+        Usuario.comissao_rv,
+        Usuario.comissao_alocacao,
+        Usuario.comissao_previdencia,
+        Usuario.comissao_seguros,
+        Usuario.comissao_bancoxp,
+        Usuario.comissao_cambio
+    )
+
+    filters = Usuario.filters
+    return render_template('pages/comissoes.html', query=query, filters=filters)
 
 
 # ------------------------
@@ -237,7 +251,6 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        print('1: ',form.email.data)
         user = load_user(email=form.email.data)
 
         if user is None or user.password != form.password.data:
