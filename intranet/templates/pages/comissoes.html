@@ -16,7 +16,7 @@
     {% for row in query %}
       <tr>
         {% for item, col in row | jinja_zip(row.keys()) %}
-        <th class="text-center">{{ item | fmt(filters.get(col,'none_filter')) }}</th>
+        <td class="text-center">{{ item | fmt(filters.get(col,'none_filter')) }}</th>
         {% endfor %}
       </tr>
       {% endfor %}

@@ -10,7 +10,7 @@
       {{ form.ano_mes(class_='form-control first-input', required=true) }}
       <br>
       <div {% if not current_user.is_admin %} class="hidden" {% endif %}>
-      {{ form.assessores(class_='form-control', required=true) }}
+      {{ form.usuarios(class_='form-control', required=true) }}
       <br>
       </div>
       <input type="submit" name="action" value="Consultar" class="btn btn-primary btn-lg">

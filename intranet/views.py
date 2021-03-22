@@ -116,7 +116,7 @@ def resumo():
 
     for i in assessores:
         t = (i.id, str(i.nome))
-        form.assessores.choices.append(t)
+        form.usuarios.choices.append(t)
 
     # lista de anos_meses
     anos_meses = set()
@@ -131,7 +131,7 @@ def resumo():
 
 
     if request.method == 'POST':
-        assessor = load_user(id=form.assessores.data)
+        assessor = load_user(id=form.usuarios.data)
         ano, mes = map(int, form.ano_mes.data.split('/'))
         ano_mes = datetime.date(ano, mes, 1)
         
